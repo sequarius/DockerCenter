@@ -11,6 +11,14 @@
 	<name>docker-center-node</name>
 	<description>The center part of docker center</description>
 
+	<repositories>
+		<repository>
+			<id>public</id>
+			<name>Public Repository</name>
+			<url>http://112.74.62.45:18080/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -48,6 +56,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.sequarius</groupId>
+			<artifactId>dockercenter.common</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 
