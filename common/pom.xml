@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>gov.sequarius</groupId>
+    <artifactId>dockercenter.common</artifactId>
+    <version>0.0.1</version>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>Public Repository</name>
+            <url>http://112.74.62.45:18080/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://112.74.62.45:18080/nexus/content/repositories/releases</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://112.74.62.45:18080/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
