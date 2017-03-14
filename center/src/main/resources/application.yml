@@ -1,0 +1,4 @@
+thrift:
+  server:
+    name: CenterThriftServer
+    port: 9047
