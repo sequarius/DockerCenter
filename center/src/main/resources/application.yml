@@ -8,6 +8,13 @@ spring:
     host: localhost
     port: 6379
 
+gov:
+ sequarius:
+  docker:
+    center:
+      max-history-record: 500
+      max-node-count: 100
+
 logging:
   level:
     root: info

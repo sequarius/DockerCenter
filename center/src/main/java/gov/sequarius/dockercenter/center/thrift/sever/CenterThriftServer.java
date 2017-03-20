@@ -2,7 +2,7 @@ package gov.sequarius.dockercenter.center.thrift.sever;
 
 import gov.sequarius.dockercenter.center.thrift.handler.CenterHandler;
 import gov.sequarius.dockercenter.common.rpc.CenterService;
-import gov.sequarius.dockercenter.server.IThriftServer;
+import gov.sequarius.dockercenter.common.server.IThriftServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.TProcessorFactory;

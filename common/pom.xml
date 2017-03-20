@@ -6,7 +6,13 @@
 
     <groupId>gov.sequarius</groupId>
     <artifactId>dockercenter.common</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.9</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
     <repositories>
         <repository>
@@ -32,6 +38,13 @@
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
             <version>0.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.14</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
