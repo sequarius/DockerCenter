@@ -1,17 +1,20 @@
-namespace java gov.sequarius.dockercenter.rpc
+namespace java gov.sequarius.dockercenter.common.rpc
 
 exception CommonException {
     1: required i32 code,
     2: string message
 }
 
-struct ResultDTO{
-    1: required bool result,
-    2: string message,
-    3: string code,
-    4: string commandExcResult
+struct ExecuteResultDTO{
+    1: string returnMessage,
+    2: required i32 resultCode,
 }
 
+struct CommonResultDTO{
+    1: required i32 resultCode,
+    2: bool result,
+    3: string message,
+}
 
 /**
 * 节点信息DTO
@@ -20,7 +23,7 @@ struct NodeInfoDTO {
     /** 名称 */
     1:string name,
     /** ip */
-    2:string ip,
+    2:required string ip,
     /** 操作系统类型 */
     3:string architecture,
     /** 剩余磁盘空间 (kb) */
@@ -37,15 +40,19 @@ struct NodeInfoDTO {
     9:string dockerVersion,
     /** docker 状态 */
     10:string dockerStatus
+    /** 节点tag*/
+    11:i32 tag
 }
 /**
 * 执行命令dto
 **/
 struct CommandDTO{
     /** 命令 */
-    1:string command ,
+    1:required string command ,
     /** 参数 */
-    2:list<string> params
+    2:list<string> params,
+    /** 执行节点tag*/
+    3:i32 nodeTag;
 }
 
 /**
@@ -57,16 +64,22 @@ service BaseService{
 /**
 * 中心节点服务
 **/
-service CenterService extends BaseService{
+service CenterRPCService extends BaseService{
     /** 注册节点*/
-    ResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
+    CommonResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
+    /** 注销节点*/
+    CommonResultDTO removeNode(1:string ip);
+    /** 获取注册节点列表 */
+    map<string,NodeInfoDTO> getNodeMap();
+    /** 执行docker指令*/
+    ExecuteResultDTO excuteCommand(1:CommandDTO dto);
 }
 /**
 * 子节点服务
 **/
-service NodeService extends BaseService{
+service NodeRPCService extends BaseService{
     /** 在子节点执行命令*/
-    ResultDTO exctueCommand(1:CommandDTO dto);
+    ExecuteResultDTO exctueCommand(1:CommandDTO dto);
     /** 获取子节点信息*/
     NodeInfoDTO getNodeInfo();
 }

@@ -1,7 +1,7 @@
 package gov.sequarius.dockercenter.center.thrift.sever;
 
 import gov.sequarius.dockercenter.center.thrift.handler.CenterHandler;
-import gov.sequarius.dockercenter.common.rpc.CenterService;
+import gov.sequarius.dockercenter.common.rpc.CenterRPCService;
 import gov.sequarius.dockercenter.common.server.IThriftServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TMultiplexedProcessor;
@@ -59,7 +59,7 @@ public class CenterThriftServer implements IThriftServer {
             log.info("start thrift server " + thriftServerName + " on port " + thriftServerPort);
             TServer.Args args = new TServer.Args(new TServerSocket(thriftServerPort));
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
-            processor.registerProcessor("CenterService", new CenterService.Processor(centerHandler));
+            processor.registerProcessor("CenterRPCService", new CenterRPCService.Processor(centerHandler));
             args.transportFactory(new TTransportFactory());
             args.processor(processor);
             args.processorFactory(new TProcessorFactory(processor));

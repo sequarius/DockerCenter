@@ -24,39 +24,50 @@ public class CenterServiceImpl implements CenterService {
     @Resource
     RedisTemplate<String, Map<String, NodeInfoDTO>> redisTemplate;
 
-    Map<String, NodeInfoDTO> nodeInfo;
+    Map<String, NodeInfoDTO> ipNodeTable;
+
+    Map<Integer, NodeInfoDTO> tagNodeTable;
 
     @Value("${gov.sequarius.docker.center.max-node-count}")
     private Integer MAX_NODE_COUNT;
 
     @PostConstruct
     private void init() {
-        nodeInfo = redisTemplate.opsForValue().get(Constant.KEY_NODE_INFO);
-        if (nodeInfo == null) {
-            nodeInfo = new HashMap<>();
+        ipNodeTable = redisTemplate.opsForValue().get(Constant.KEY_NODE_INFO);
+        if (ipNodeTable == null) {
+            ipNodeTable = new HashMap<>();
             persistentNodeInfo();
         }
+        if(tagNodeTable ==null){
+            tagNodeTable =new HashMap<>();
+        }
+        ipNodeTable.forEach((ip, nodeInfo) -> tagNodeTable.put(nodeInfo.getTag(), nodeInfo));
     }
 
     private void persistentNodeInfo() {
-        redisTemplate.opsForValue().set(Constant.KEY_NODE_INFO, nodeInfo);
+        redisTemplate.opsForValue().set(Constant.KEY_NODE_INFO, ipNodeTable);
     }
 
 
     @Override
     public CommonResult registerNodeInfo(NodeInfoDTO nodeInfoDTO) {
-        if (nodeInfo.containsKey(nodeInfoDTO.getIp())) {
-            return CommonResult.result(false, "node is already registered.");
-        }
-        if (nodeInfo.size() >= MAX_NODE_COUNT) {
-            return CommonResult.result(false, String.format("node count is over the max limit count of %s",
-                    MAX_NODE_COUNT));
-        }
         String nodeIp = nodeInfoDTO.getIp();
         if (!IPUtil.isLegalIP(nodeIp)) {
             return CommonResult.result(false, String.format("ip %s is an illegal address", nodeIp));
         }
-        nodeInfo.put(nodeIp, nodeInfoDTO);
+
+        synchronized (this) {
+            if (getCurrentNodeCount() >= MAX_NODE_COUNT) {
+                return CommonResult.result(false, String.format("node count is over the max limit count of %s",
+                        MAX_NODE_COUNT));
+            }
+            if (ipNodeTable.containsKey(nodeInfoDTO.getIp())) {
+                return CommonResult.result(false, "node is already registered.");
+            }
+            nodeInfoDTO.setTag(getCurrentNodeCount()+1);
+            ipNodeTable.put(nodeIp, nodeInfoDTO);
+            tagNodeTable.put(nodeInfoDTO.getTag(),nodeInfoDTO);
+        }
         persistentNodeInfo();
         return CommonResult.result(true, String.format("node %s register successfully.", nodeIp));
     }
@@ -64,17 +75,27 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public CommonResult removeNodeInfoByIp(String ip) {
-        if (!nodeInfo.containsKey(ip)) {
-            return CommonResult.result(false, String.format("cant find node %s.",ip));
+        if (!ipNodeTable.containsKey(ip)) {
+            return CommonResult.result(false, String.format("cant find node %s.", ip));
         }
-        nodeInfo.remove(ip);
+        ipNodeTable.remove(ip);
         persistentNodeInfo();
-        return CommonResult.result(true,String.format("node %s remove successfully.",ip));
+        return CommonResult.result(true, String.format("node %s remove successfully.", ip));
     }
 
     @Override
     public Map<String, NodeInfoDTO> getNodeInfoMap() {
-        return nodeInfo;
+        return ipNodeTable;
+    }
+
+    private int getCurrentNodeCount(){
+        return getNodeInfoMap().size();
+    }
+
+    @Override
+    public NodeInfoDTO findNodeByTag(Integer tag) {
+        NodeInfoDTO nodeInfoDTO = tagNodeTable.get(tag);
+        return nodeInfoDTO;
     }
 
 }

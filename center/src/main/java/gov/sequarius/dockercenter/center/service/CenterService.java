@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public interface CenterService {
     CommonResult registerNodeInfo(NodeInfoDTO nodeInfoDTO);
+
     CommonResult removeNodeInfoByIp(String ip);
-    Map<String,NodeInfoDTO> getNodeInfoMap();
+
+    Map<String, NodeInfoDTO> getNodeInfoMap();
+
+    NodeInfoDTO findNodeByTag(Integer tag);
 }
