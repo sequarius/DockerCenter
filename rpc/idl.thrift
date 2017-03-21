@@ -1,5 +1,12 @@
 namespace java gov.sequarius.dockercenter.common.rpc
 
+
+const map<i32,string> RESPONSE_CODE_MAP={
+    0:"SUCCESS",
+    -0xFF00FFF:"UNDEFINED CODE",
+    401:"UNAUTHORIZED NODE"
+}
+
 exception CommonException {
     1: required i32 code,
     2: string message
@@ -8,12 +15,27 @@ exception CommonException {
 struct ExecuteResultDTO{
     1: string returnMessage,
     2: required i32 resultCode,
+    3: i32 nodeTag,
+    4: i32 commandTag
+}
+
+/**
+* 执行命令dto
+**/
+struct CommandDTO{
+    /** 命令 */
+    1:required string command ,
+    /** 参数 */
+    2:list<string> params,
+    /** 执行节点tag*/
+    3: i32 nodeTag,
+    4: i32 commandTag
 }
 
 struct CommonResultDTO{
     1: required i32 resultCode,
     2: bool result,
-    3: string message,
+    3: string message
 }
 
 /**
@@ -43,17 +65,7 @@ struct NodeInfoDTO {
     /** 节点tag*/
     11:i32 tag
 }
-/**
-* 执行命令dto
-**/
-struct CommandDTO{
-    /** 命令 */
-    1:required string command ,
-    /** 参数 */
-    2:list<string> params,
-    /** 执行节点tag*/
-    3:i32 nodeTag;
-}
+
 
 /**
 * 基础服务
@@ -64,9 +76,11 @@ service BaseService{
 /**
 * 中心节点服务
 **/
-service CenterRPCService extends BaseService{
+service CenterSynRPCService extends BaseService{
     /** 注册节点*/
     CommonResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
+    /** 更新节点状态*/
+    CommonResultDTO updateNodeInfo(1:NodeInfoDTO nodeInfo);
     /** 注销节点*/
     CommonResultDTO removeNode(1:string ip);
     /** 获取注册节点列表 */
@@ -74,12 +88,17 @@ service CenterRPCService extends BaseService{
     /** 执行docker指令*/
     ExecuteResultDTO excuteCommand(1:CommandDTO dto);
 }
+
+service CenterAsynRPCService{
+    /**连接主节点 */
+    oneway void connet();
+    /**异步通知命令执行完成*/
+    oneway void onCommandExcuteFinish(1:ExecuteResultDTO executeResultDTO);
+}
 /**
 * 子节点服务
 **/
 service NodeRPCService extends BaseService{
     /** 在子节点执行命令*/
-    ExecuteResultDTO exctueCommand(1:CommandDTO dto);
-    /** 获取子节点信息*/
-    NodeInfoDTO getNodeInfo();
+    oneway void exctueCommand(1:CommandDTO dto);
 }

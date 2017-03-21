@@ -1,4 +1,4 @@
-package gov.sequarius.dockercenter.common.server;
+package gov.sequarius.dockercenter.center.thrift.sever;
 
 /**
  * Created by Sequarius on 2017/3/14.

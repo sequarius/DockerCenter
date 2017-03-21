@@ -30,6 +30,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<common.package.version>0.0.14</common.package.version>
 	</properties>
 
 	<dependencies>
@@ -60,7 +61,13 @@
 		<dependency>
 			<groupId>gov.sequarius</groupId>
 			<artifactId>dockercenter.common</artifactId>
-			<version>0.0.1</version>
+			<version>${common.package.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.10.0</version>
 		</dependency>
 	</dependencies>
 

@@ -1,0 +1,10 @@
+thrift:
+  server:
+    syn:
+      port: 9047
+    asyn:
+      port: 9147
+logging:
+  level:
+    root: info
+    gov.sequarius: debug

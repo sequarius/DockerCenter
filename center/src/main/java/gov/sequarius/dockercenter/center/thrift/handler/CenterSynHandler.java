@@ -18,17 +18,23 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class CenterHandler implements CenterRPCService.Iface {
+public class CenterSynHandler implements CenterSynRPCService.Iface {
 
     @Resource
     CenterService centerService;
 
     @Override
     public CommonResultDTO registerNode(NodeInfoDTO nodeInfoDTO, String s) throws TException {
+        log.debug("node infoDTO=={},code=={}",nodeInfoDTO,s);
         CommonResult commonResult = centerService.registerNodeInfo(nodeInfoDTO);
         CommonResultDTO commonResultDTO = new CommonResultDTO();
         BeanUtils.copyProperties(commonResult, commonResultDTO);
         return commonResultDTO;
+    }
+
+    @Override
+    public CommonResultDTO updateNodeInfo(NodeInfoDTO nodeInfoDTO) throws TException {
+        return null;
     }
 
     @Override

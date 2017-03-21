@@ -1,8 +1,11 @@
 thrift:
   server:
-    name: CenterThriftServer
-    port: 9047
-
+    syn:
+      name: CenterSynThriftServer
+      port: 9047
+    asyn:
+      name: CenterAsynThriftServer
+      port: 9147
 spring:
   redis:
     host: localhost
