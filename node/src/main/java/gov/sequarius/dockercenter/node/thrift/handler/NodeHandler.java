@@ -22,7 +22,7 @@ public class NodeHandler implements NodeRPCService.Iface {
     @Override
     public void exctueCommand(CommandDTO commandDTO) throws TException {
         log.debug("command into=={}",commandDTO);
-        ExecuteResultDTO resultDTO=new ExecuteResultDTO("bbb",0,2333,6666);
+        ExecuteResultDTO resultDTO=new ExecuteResultDTO("bbb",0);
         centerAsynClient.onCommandExcuteFinish(resultDTO);
     }
 }

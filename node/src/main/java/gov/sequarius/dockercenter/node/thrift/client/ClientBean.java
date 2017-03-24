@@ -41,7 +41,8 @@ public class ClientBean {
                 while (np.process(new TBinaryProtocol(tSocket), new TBinaryProtocol(tSocket))) {
                 }
             } catch (TException e) {
-                e.printStackTrace();
+                log.warn(e.getMessage(),e);
+                tSocket.close();
             }
         });
         return client;

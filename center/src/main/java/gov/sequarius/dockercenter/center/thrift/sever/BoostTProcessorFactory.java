@@ -28,7 +28,7 @@ public class BoostTProcessorFactory extends TProcessorFactory {
         InetAddress inetAddress = socket.getSocket().getInetAddress();
         String hostAddress = inetAddress.getHostAddress();
         log.debug("host address=={},port=={}", hostAddress, socket.getSocket().getPort());
-        CommandDTO commandDTO = new CommandDTO("aaaa", null, 00,999);
+        CommandDTO commandDTO = new CommandDTO("aaaa", null);
 
         new Thread(new Runnable() {
             @Override

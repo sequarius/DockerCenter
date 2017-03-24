@@ -1,4 +1,5 @@
 namespace java gov.sequarius.dockercenter.common.rpc
+namespace cpp dockercenter
 
 
 const map<i32,string> RESPONSE_CODE_MAP={
@@ -9,14 +10,14 @@ const map<i32,string> RESPONSE_CODE_MAP={
 
 exception CommonException {
     1: required i32 code,
-    2: string message
+    2: optional string message
 }
 
 struct ExecuteResultDTO{
     1: string returnMessage,
     2: required i32 resultCode,
-    3: i32 nodeTag,
-    4: i32 commandTag
+    3: optional i32 nodeTag,
+    4: optional i32 commandTag
 }
 
 /**
@@ -28,14 +29,14 @@ struct CommandDTO{
     /** 参数 */
     2:list<string> params,
     /** 执行节点tag*/
-    3: i32 nodeTag,
-    4: i32 commandTag
+    3: optional i32 nodeTag,
+    4: optional i32 commandTag
 }
 
 struct CommonResultDTO{
     1: required i32 resultCode,
     2: bool result,
-    3: string message
+    3: optional string message
 }
 
 /**
@@ -63,7 +64,7 @@ struct NodeInfoDTO {
     /** docker 状态 */
     10:string dockerStatus
     /** 节点tag*/
-    11:i32 tag
+    11:optional i32 tag
 }
 
 
@@ -86,7 +87,7 @@ service CenterSynRPCService extends BaseService{
     /** 获取注册节点列表 */
     map<string,NodeInfoDTO> getNodeMap();
     /** 执行docker指令*/
-    ExecuteResultDTO excuteCommand(1:CommandDTO dto);
+    ExecuteResultDTO executeCommand(1:CommandDTO dto);
 }
 
 service CenterAsynRPCService{

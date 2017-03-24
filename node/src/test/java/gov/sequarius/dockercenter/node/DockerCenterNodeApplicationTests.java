@@ -2,6 +2,8 @@ package gov.sequarius.dockercenter.node;
 
 import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CenterSynRPCService;
+import gov.sequarius.dockercenter.common.rpc.CommonResultDTO;
+import gov.sequarius.dockercenter.common.rpc.NodeInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.junit.Test;
@@ -48,5 +50,13 @@ public class DockerCenterNodeApplicationTests {
         while (true){
             Thread.sleep(5000);
         }
+    }
+    @Test
+    public void testSynClinet() throws TException {
+        NodeInfoDTO nodeInfoDTO=new NodeInfoDTO();
+        nodeInfoDTO.setName("tom");
+        nodeInfoDTO.setIp("192.168.0.2");
+        CommonResultDTO commonResultDTO = centerSynClient.registerNode(nodeInfoDTO, "544484");
+        log.debug("result=={}",commonResultDTO);
     }
 }

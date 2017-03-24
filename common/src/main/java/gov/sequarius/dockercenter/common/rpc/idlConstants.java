@@ -11,8 +11,8 @@ public class idlConstants {
 
   public static final java.util.Map<Integer,String> RESPONSE_CODE_MAP = new java.util.HashMap<Integer,String>();
   static {
-    RESPONSE_CODE_MAP.put(401, "UNAUTHORIZED NODE");
     RESPONSE_CODE_MAP.put(-267390975, "UNDEFINED CODE");
+    RESPONSE_CODE_MAP.put(401, "UNAUTHORIZED NODE");
     RESPONSE_CODE_MAP.put(0, "SUCCESS");
   }
 

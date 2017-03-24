@@ -51,14 +51,17 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
     }
 
     @Override
-    public ExecuteResultDTO excuteCommand(CommandDTO commandDTO) throws TException {
+    public ExecuteResultDTO executeCommand(CommandDTO commandDTO) throws TException {
         Integer tag = commandDTO.getNodeTag();
         if (tag == null) {
             tag = Constant.LOCAL_NODE_TAG;
         }
         NodeInfoDTO nodeInfoDTO=centerService.findNodeByTag(tag);
+        log.debug("into here {}",commandDTO);
         //todo
-        return null;
+        ExecuteResultDTO executeResultDTO = new ExecuteResultDTO();
+        executeResultDTO.setReturnMessage("e");
+        return executeResultDTO;
     }
 
 
