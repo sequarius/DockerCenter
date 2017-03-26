@@ -1,8 +1,8 @@
 package gov.sequarius.dockercenter.center.thrift.handler;
 
 
-import gov.sequarius.dockercenter.center.common.Constant;
 import gov.sequarius.dockercenter.center.service.CenterService;
+import gov.sequarius.dockercenter.center.service.CommandService;
 import gov.sequarius.dockercenter.common.domain.CommonResult;
 import gov.sequarius.dockercenter.common.rpc.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +19,11 @@ import java.util.Map;
 @Slf4j
 @Component
 public class CenterSynHandler implements CenterSynRPCService.Iface {
-
     @Resource
     CenterService centerService;
+
+    @Resource
+    CommandService commandService;
 
     @Override
     public CommonResultDTO registerNode(NodeInfoDTO nodeInfoDTO, String s) throws TException {
@@ -52,16 +54,7 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
 
     @Override
     public ExecuteResultDTO executeCommand(CommandDTO commandDTO) throws TException {
-        Integer tag = commandDTO.getNodeTag();
-        if (tag == null) {
-            tag = Constant.LOCAL_NODE_TAG;
-        }
-        NodeInfoDTO nodeInfoDTO=centerService.findNodeByTag(tag);
-        log.debug("into here {}",commandDTO);
-        //todo
-        ExecuteResultDTO executeResultDTO = new ExecuteResultDTO();
-        executeResultDTO.setReturnMessage("e");
-        return executeResultDTO;
+        return commandService.callCommand(commandDTO);
     }
 
 

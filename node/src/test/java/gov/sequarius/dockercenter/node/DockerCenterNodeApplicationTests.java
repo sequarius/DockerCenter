@@ -52,10 +52,10 @@ public class DockerCenterNodeApplicationTests {
         }
     }
     @Test
-    public void testSynClinet() throws TException {
+    public void testSynClient() throws TException {
         NodeInfoDTO nodeInfoDTO=new NodeInfoDTO();
-        nodeInfoDTO.setName("tom");
-        nodeInfoDTO.setIp("192.168.0.2");
+        nodeInfoDTO.setName("jetty");
+        nodeInfoDTO.setIp("127.0.0.1");
         CommonResultDTO commonResultDTO = centerSynClient.registerNode(nodeInfoDTO, "544484");
         log.debug("result=={}",commonResultDTO);
     }

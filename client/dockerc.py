@@ -22,8 +22,9 @@ def execute_command(dc_command):
         client = CenterSynRPCService.Client(protocol)
         transport.open()
         dto = CommandDTO(command.command, dc_command.docker_params)
+        dto.nodeTag = int(dc_command.center_params['--node-tag'])
         result = client.executeCommand(dto)
-        print(result)
+        print(result.returnMessage)
     except Thrift.TException as e:
         print(e)
 
@@ -74,7 +75,6 @@ def get_node_info():
 if __name__ == '__main__':
     command = parse_param(sys.argv)
     if command.command not in docker_center_command:
-        print(command.docker_params)
         execute_command(command)
     else:
         if command.command == docker_center_command[0]:

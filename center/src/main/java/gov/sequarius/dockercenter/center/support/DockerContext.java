@@ -1,6 +1,6 @@
 package gov.sequarius.dockercenter.center.support;
 
-import gov.sequarius.dockercenter.center.domain.DockerCommand;
+import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +15,16 @@ import java.util.Queue;
 public class DockerContext {
     @Value("${gov.sequarius.docker.center.max-history-record}")
     private Integer MAX_HISTORY_RECORD;
-    Queue<DockerCommand> commandsHistories;
+    Queue<CommandDTO> commandsHistories;
 
     @PostConstruct
     private void init() {
         commandsHistories = new ArrayDeque<>(MAX_HISTORY_RECORD / 4);
     }
 
-    public void addCommand(DockerCommand command) {
+    public void addCommand(CommandDTO command) {
         while (commandsHistories.size() >= MAX_HISTORY_RECORD) {
-            DockerCommand dockerCommand = commandsHistories.poll();
+            CommandDTO dockerCommand = commandsHistories.poll();
             if (dockerCommand == null) {
                 break;
             }

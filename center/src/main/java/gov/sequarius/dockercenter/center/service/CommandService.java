@@ -1,11 +1,12 @@
 package gov.sequarius.dockercenter.center.service;
 
-import gov.sequarius.dockercenter.center.domain.DockerCommand;
-import gov.sequarius.dockercenter.common.domain.ExecuteResult;
+import gov.sequarius.dockercenter.common.rpc.CommandDTO;
+import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
 
 /**
  * Created by Sequarius on 2017/3/20.
  */
 public interface CommandService {
-    ExecuteResult callCommand(DockerCommand command);
+    ExecuteResultDTO callCommand(CommandDTO command);
+    void onCommandExecuted(ExecuteResultDTO result);
 }

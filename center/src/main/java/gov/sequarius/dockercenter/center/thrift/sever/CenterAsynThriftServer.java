@@ -2,6 +2,7 @@ package gov.sequarius.dockercenter.center.thrift.sever;
 
 import gov.sequarius.dockercenter.center.thrift.handler.CenterAsynHandler;
 import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
+import gov.sequarius.dockercenter.common.rpc.NodeRPCService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -29,6 +30,7 @@ public class CenterAsynThriftServer implements IThriftServer {
 
     @Resource
     private CenterAsynHandler centerHandler;
+    private BoostTProcessorFactory boostTProcessorFactory;
 
     @Override
     @PostConstruct
@@ -58,11 +60,11 @@ public class CenterAsynThriftServer implements IThriftServer {
             TServer.Args args = new TServer.Args(new TServerSocket(thriftServerPort));
 //            TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
-            BoostTProcessorFactory processorFactory = new BoostTProcessorFactory(new CenterAsynRPCService.Processor
+            boostTProcessorFactory = new BoostTProcessorFactory(new CenterAsynRPCService.Processor
                     (centerHandler));
 //            processor.registerProcessor("CenterRPCService", new CenterRPCService.Processor(centerHandler));
             args.protocolFactory(protocolFactory);
-            args.processorFactory(processorFactory);
+            args.processorFactory(boostTProcessorFactory);
 //            args.processorFactory(new TProcessorFactory(processor));
             server = new TSimpleServer(args);
         } catch (TTransportException e) {
@@ -72,6 +74,9 @@ public class CenterAsynThriftServer implements IThriftServer {
         }
     }
 
+    public NodeRPCService.Client selectClientByIp(String ip){
+        return boostTProcessorFactory.selectClientByIp(ip);
+    }
     @Override
     public void stop() {
         if (server != null && server.isServing()) {
