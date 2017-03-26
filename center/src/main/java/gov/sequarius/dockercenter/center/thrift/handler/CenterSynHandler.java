@@ -31,6 +31,7 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
         CommonResult commonResult = centerService.registerNodeInfo(nodeInfoDTO);
         CommonResultDTO commonResultDTO = new CommonResultDTO();
         BeanUtils.copyProperties(commonResult, commonResultDTO);
+
         return commonResultDTO;
     }
 

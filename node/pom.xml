@@ -30,7 +30,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<common.package.version>0.0.15</common.package.version>
+		<common.package.version>0.0.16</common.package.version>
 	</properties>
 
 	<dependencies>

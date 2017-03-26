@@ -18,13 +18,13 @@ from thrift.transport import TTransport
 class Iface(object):
     def connet(self):
         """
-        连接主节点
+        connet
         """
         pass
 
     def onCommandExcuteFinish(self, executeResultDTO):
         """
-        异步通知命令执行完成
+        call back when excute command finish
 
         Parameters:
          - executeResultDTO
@@ -41,7 +41,7 @@ class Client(Iface):
 
     def connet(self):
         """
-        连接主节点
+        connet
         """
         self.send_connet()
 
@@ -54,7 +54,7 @@ class Client(Iface):
 
     def onCommandExcuteFinish(self, executeResultDTO):
         """
-        异步通知命令执行完成
+        call back when excute command finish
 
         Parameters:
          - executeResultDTO

@@ -12,6 +12,6 @@ import sys
 from .ttypes import *
 RESPONSE_CODE_MAP = {
     0: "SUCCESS",
-    -267390975: "UNDEFINED CODE",
     401: "UNAUTHORIZED NODE",
+    -267390975: "UNDEFINED CODE",
 }

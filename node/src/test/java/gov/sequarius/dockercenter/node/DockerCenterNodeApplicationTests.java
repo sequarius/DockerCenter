@@ -59,4 +59,6 @@ public class DockerCenterNodeApplicationTests {
         CommonResultDTO commonResultDTO = centerSynClient.registerNode(nodeInfoDTO, "544484");
         log.debug("result=={}",commonResultDTO);
     }
+
+
 }

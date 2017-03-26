@@ -16,18 +16,10 @@ from thrift.transport import TTransport
 
 
 class Iface(object):
-    """
-    基础服务
-
-    """
     pass
 
 
 class Client(Iface):
-    """
-    基础服务
-
-    """
     def __init__(self, iprot, oprot=None):
         self._iprot = self._oprot = iprot
         if oprot is not None:

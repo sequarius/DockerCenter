@@ -190,14 +190,14 @@ class ExecuteResultDTO(object):
 
 class CommandDTO(object):
     """
-    执行命令dto
+    command dto
 
 
     Attributes:
-     - command: 命令
-     - params: 参数
-     - nodeTag: 执行节点tag
-     - commandTag
+     - command: command
+     - params: params
+     - nodeTag: execute tag
+     - commandTag: command tag
     """
 
     thrift_spec = (
@@ -299,6 +299,9 @@ class CommandDTO(object):
 
 class CommonResultDTO(object):
     """
+    command Result dto
+
+
     Attributes:
      - resultCode
      - result
@@ -385,21 +388,22 @@ class CommonResultDTO(object):
 
 class NodeInfoDTO(object):
     """
-    节点信息DTO
+    node info dto
 
 
     Attributes:
-     - name: 名称
-     - ip: ip
-     - architecture: 操作系统类型
-     - freeDiskSpace: 剩余磁盘空间 (kb)
-     - freeMemorySpace: 剩余内存空间 (kb)
-     - responseTime: 响应时间(ms)
-     - containerCount: 容器数量
-     - RunningContainerCount: 正在运行容器数量
-     - dockerVersion: docker 版本信息
-     - dockerStatus: docker 状态
-     - tag: 节点tag
+     - name
+     - ip
+     - architecture
+     - freeDiskSpace
+     - freeMemorySpace
+     - responseTime
+     - containerCount
+     - RunningContainerCount
+     - dockerVersion
+     - dockerStatus
+     - tag
+     - callTime
     """
 
     thrift_spec = (
@@ -415,9 +419,10 @@ class NodeInfoDTO(object):
         (9, TType.STRING, 'dockerVersion', 'UTF8', None, ),  # 9
         (10, TType.STRING, 'dockerStatus', 'UTF8', None, ),  # 10
         (11, TType.I32, 'tag', None, None, ),  # 11
+        (12, TType.I64, 'callTime', None, None, ),  # 12
     )
 
-    def __init__(self, name=None, ip=None, architecture=None, freeDiskSpace=None, freeMemorySpace=None, responseTime=None, containerCount=None, RunningContainerCount=None, dockerVersion=None, dockerStatus=None, tag=None,):
+    def __init__(self, name=None, ip=None, architecture=None, freeDiskSpace=None, freeMemorySpace=None, responseTime=None, containerCount=None, RunningContainerCount=None, dockerVersion=None, dockerStatus=None, tag=None, callTime=None,):
         self.name = name
         self.ip = ip
         self.architecture = architecture
@@ -429,6 +434,7 @@ class NodeInfoDTO(object):
         self.dockerVersion = dockerVersion
         self.dockerStatus = dockerStatus
         self.tag = tag
+        self.callTime = callTime
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -494,6 +500,11 @@ class NodeInfoDTO(object):
                     self.tag = iprot.readI32()
                 else:
                     iprot.skip(ftype)
+            elif fid == 12:
+                if ftype == TType.I64:
+                    self.callTime = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -547,6 +558,10 @@ class NodeInfoDTO(object):
         if self.tag is not None:
             oprot.writeFieldBegin('tag', TType.I32, 11)
             oprot.writeI32(self.tag)
+            oprot.writeFieldEnd()
+        if self.callTime is not None:
+            oprot.writeFieldBegin('callTime', TType.I64, 12)
+            oprot.writeI64(self.callTime)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()

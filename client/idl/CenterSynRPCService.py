@@ -17,13 +17,9 @@ from thrift.transport import TTransport
 
 
 class Iface(idl.BaseService.Iface):
-    """
-    中心节点服务
-
-    """
     def registerNode(self, nodeInfo, authCode):
         """
-        注册节点
+        registerNode
 
         Parameters:
          - nodeInfo
@@ -33,7 +29,7 @@ class Iface(idl.BaseService.Iface):
 
     def updateNodeInfo(self, nodeInfo):
         """
-        更新节点状态
+        updateNodeInfo
 
         Parameters:
          - nodeInfo
@@ -42,7 +38,7 @@ class Iface(idl.BaseService.Iface):
 
     def removeNode(self, ip):
         """
-        注销节点
+        removeNode
 
         Parameters:
          - ip
@@ -51,13 +47,13 @@ class Iface(idl.BaseService.Iface):
 
     def getNodeMap(self):
         """
-        获取注册节点列表
+        getNodeMap
         """
         pass
 
     def executeCommand(self, dto):
         """
-        执行docker指令
+        executeCommand
 
         Parameters:
          - dto
@@ -66,16 +62,12 @@ class Iface(idl.BaseService.Iface):
 
 
 class Client(idl.BaseService.Client, Iface):
-    """
-    中心节点服务
-
-    """
     def __init__(self, iprot, oprot=None):
         idl.BaseService.Client.__init__(self, iprot, oprot)
 
     def registerNode(self, nodeInfo, authCode):
         """
-        注册节点
+        registerNode
 
         Parameters:
          - nodeInfo
@@ -110,7 +102,7 @@ class Client(idl.BaseService.Client, Iface):
 
     def updateNodeInfo(self, nodeInfo):
         """
-        更新节点状态
+        updateNodeInfo
 
         Parameters:
          - nodeInfo
@@ -143,7 +135,7 @@ class Client(idl.BaseService.Client, Iface):
 
     def removeNode(self, ip):
         """
-        注销节点
+        removeNode
 
         Parameters:
          - ip
@@ -176,7 +168,7 @@ class Client(idl.BaseService.Client, Iface):
 
     def getNodeMap(self):
         """
-        获取注册节点列表
+        getNodeMap
         """
         self.send_getNodeMap()
         return self.recv_getNodeMap()
@@ -205,7 +197,7 @@ class Client(idl.BaseService.Client, Iface):
 
     def executeCommand(self, dto):
         """
-        执行docker指令
+        executeCommand
 
         Parameters:
          - dto

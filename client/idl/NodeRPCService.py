@@ -17,13 +17,9 @@ from thrift.transport import TTransport
 
 
 class Iface(idl.BaseService.Iface):
-    """
-    子节点服务
-
-    """
     def exctueCommand(self, dto):
         """
-        在子节点执行命令
+        run command on node
 
         Parameters:
          - dto
@@ -32,16 +28,12 @@ class Iface(idl.BaseService.Iface):
 
 
 class Client(idl.BaseService.Client, Iface):
-    """
-    子节点服务
-
-    """
     def __init__(self, iprot, oprot=None):
         idl.BaseService.Client.__init__(self, iprot, oprot)
 
     def exctueCommand(self, dto):
         """
-        在子节点执行命令
+        run command on node
 
         Parameters:
          - dto

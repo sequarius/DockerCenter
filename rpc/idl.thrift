@@ -21,18 +21,22 @@ struct ExecuteResultDTO{
 }
 
 /**
-* 执行命令dto
+* command dto
 **/
 struct CommandDTO{
-    /** 命令 */
+    /** command */
     1:required string command ,
-    /** 参数 */
+    /** params */
     2:list<string> params,
-    /** 执行节点tag*/
+    /** execute tag*/
     3: optional i32 nodeTag,
+    /** command tag*/
     4: optional i32 commandTag
 }
 
+/**
+* command Result dto
+**/
 struct CommonResultDTO{
     1: required i32 resultCode,
     2: bool result,
@@ -40,66 +44,51 @@ struct CommonResultDTO{
 }
 
 /**
-* 节点信息DTO
+* node info dto
 **/
 struct NodeInfoDTO {
-    /** 名称 */
     1:string name,
-    /** ip */
     2:required string ip,
-    /** 操作系统类型 */
     3:string architecture,
-    /** 剩余磁盘空间 (kb) */
 	4:i64 freeDiskSpace,
-	/** 剩余内存空间 (kb) */
 	5:i64 freeMemorySpace,
-	/** 响应时间(ms)*/
 	6:i64 responseTime,
-	/** 容器数量*/
 	7:i64 containerCount,
-	/** 正在运行容器数量*/
 	8:i64 RunningContainerCount,
-	/** docker 版本信息 */
     9:string dockerVersion,
-    /** docker 状态 */
     10:string dockerStatus
-    /** 节点tag*/
     11:optional i32 tag
+    12:i64 callTime
 }
 
 
-/**
-* 基础服务
-**/
+
 service BaseService{
 
 }
-/**
-* 中心节点服务
-**/
+
+
 service CenterSynRPCService extends BaseService{
-    /** 注册节点*/
+    /** registerNode*/
     CommonResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
-    /** 更新节点状态*/
+    /** updateNodeInfo*/
     CommonResultDTO updateNodeInfo(1:NodeInfoDTO nodeInfo);
-    /** 注销节点*/
+    /** removeNode*/
     CommonResultDTO removeNode(1:string ip);
-    /** 获取注册节点列表 */
+    /** getNodeMap */
     map<string,NodeInfoDTO> getNodeMap();
-    /** 执行docker指令*/
+    /** executeCommand*/
     ExecuteResultDTO executeCommand(1:CommandDTO dto);
 }
 
 service CenterAsynRPCService{
-    /**连接主节点 */
+    /**connet */
     oneway void connet();
-    /**异步通知命令执行完成*/
+    /**call back when excute command finish*/
     oneway void onCommandExcuteFinish(1:ExecuteResultDTO executeResultDTO);
 }
-/**
-* 子节点服务
-**/
+
 service NodeRPCService extends BaseService{
-    /** 在子节点执行命令*/
+    /** run command on node*/
     oneway void exctueCommand(1:CommandDTO dto);
 }

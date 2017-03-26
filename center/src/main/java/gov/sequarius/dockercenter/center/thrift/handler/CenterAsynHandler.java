@@ -24,7 +24,7 @@ public class CenterAsynHandler implements CenterAsynRPCService.Iface {
 
     @Override
     public void onCommandExcuteFinish(ExecuteResultDTO executeResultDTO) throws TException {
-        log.debug("con commnand finish {}",executeResultDTO);
+        log.debug("con command finish {}",executeResultDTO);
         commandService.onCommandExecuted(executeResultDTO);
     }
 }

@@ -25,9 +25,11 @@ public class ClientBean {
     private int ASYN_THRIFT_SERVER_PORT;
     @Value("${thrift.server.syn.port}")
     private int SYN_THRIFT_SERVER_PORT;
+    @Value("${thrift.server.ip}")
+    private String THRIFT_SERVER_IP;
     @Bean
     public CenterAsynRPCService.Client centerAsynClient(NodeHandler nodeHandler){
-        TSocket tSocket = new TSocket("127.0.0.1", ASYN_THRIFT_SERVER_PORT);
+        TSocket tSocket = new TSocket(THRIFT_SERVER_IP, ASYN_THRIFT_SERVER_PORT);
         NodeRPCService.Processor<NodeRPCService.Iface> np = new NodeRPCService.Processor<>(nodeHandler);
         try {
             tSocket.open();
@@ -50,7 +52,7 @@ public class ClientBean {
 
     @Bean
     public CenterSynRPCService.Client centerSynClient(){
-        TSocket tSocket = new TSocket("127.0.0.1", SYN_THRIFT_SERVER_PORT);
+        TSocket tSocket = new TSocket(THRIFT_SERVER_IP, SYN_THRIFT_SERVER_PORT);
         try {
             tSocket.open();
         } catch (TTransportException e) {
