@@ -13,6 +13,8 @@ sys.path.append("./idl")
 docker_center_command = ['node-list', 'help', 'version']
 docker_center_param_name = ['--node-tag']
 
+BILLION=1000000000
+
 
 def execute_command(dc_command):
     try:
@@ -65,7 +67,7 @@ def get_node_info():
         for node in result.values():
             print(node)
             x.add_row([node.tag, node.name, node.ip, node.dockerVersion, node.dockerStatus, node.architecture,
-                       node.freeDiskSpace, node.freeMemorySpace, node.responseTime, str(node.RunningContainerCount)
+                       node.freeDiskSpace/BILLION, node.freeMemorySpace/BILLION, node.responseTime, str(node.RunningContainerCount)
                        + '/' + str(node.containerCount)])
         print(x)
     except Thrift.TException as e:

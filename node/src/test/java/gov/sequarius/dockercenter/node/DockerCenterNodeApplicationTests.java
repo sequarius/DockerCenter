@@ -4,6 +4,7 @@ import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CenterSynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CommonResultDTO;
 import gov.sequarius.dockercenter.common.rpc.NodeInfoDTO;
+import gov.sequarius.dockercenter.node.thrift.service.NodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.junit.Test;
@@ -25,6 +26,9 @@ public class DockerCenterNodeApplicationTests {
     CenterSynRPCService.Client centerSynClient;
     @Resource
     CenterAsynRPCService.Client centerAsynClient;
+
+    @Resource
+    NodeService nodeService;
 
     public void contextLoads() throws IOException, InterruptedException {
         Process p = Runtime.getRuntime().exec(new String[]{"ping", "baidu.com"});
@@ -58,6 +62,12 @@ public class DockerCenterNodeApplicationTests {
         nodeInfoDTO.setIp("127.0.0.1");
         CommonResultDTO commonResultDTO = centerSynClient.registerNode(nodeInfoDTO, "544484");
         log.debug("result=={}",commonResultDTO);
+    }
+
+    @Test
+    public void testUpdateNode(){
+        Boolean result = nodeService.updateNodeInfo();
+        log.debug("result=={}",result);
     }
 
 

@@ -11,6 +11,8 @@ const map<i32,string> RESPONSE_CODE_MAP={
 exception CommonException {
     1: required i32 code,
     2: optional string message
+    3: optional i32 nodeTag
+    4: optional i32 commandTag
 }
 
 struct ExecuteResultDTO{
@@ -41,6 +43,8 @@ struct CommonResultDTO{
     1: required i32 resultCode,
     2: bool result,
     3: optional string message
+    4: optional i32 nodeTag,
+    5: optional i32 commandTag
 }
 
 /**
@@ -48,7 +52,7 @@ struct CommonResultDTO{
 **/
 struct NodeInfoDTO {
     1:string name,
-    2:required string ip,
+    2:optional string ip,
     3:string architecture,
 	4:i64 freeDiskSpace,
 	5:i64 freeMemorySpace,
@@ -74,7 +78,7 @@ service CenterSynRPCService extends BaseService{
     /** updateNodeInfo*/
     CommonResultDTO updateNodeInfo(1:NodeInfoDTO nodeInfo);
     /** removeNode*/
-    CommonResultDTO removeNode(1:string ip);
+    CommonResultDTO removeNode();
     /** getNodeMap */
     map<string,NodeInfoDTO> getNodeMap();
     /** executeCommand*/

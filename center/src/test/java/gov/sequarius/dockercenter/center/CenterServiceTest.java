@@ -45,7 +45,7 @@ public class CenterServiceTest {
 
     @Test
     public void testRemoveNode(){
-        CommonResult commonResult = centerService.removeNodeInfoByIp(TEST_IP);
+        CommonResult commonResult = centerService.removeNodeInfoByTag();
         Assert.assertTrue(commonResult.getResult());
         Assert.assertEquals(startNodeCount.longValue()-1,centerService.getNodeInfoMap().size());
     }

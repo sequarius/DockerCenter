@@ -29,6 +29,9 @@ public class CenterSynThriftServer implements IThriftServer {
     private int thriftServerPort;
 
     @Resource
+    DCServerEventHandler dcServerEventHandler;
+
+    @Resource
     private CenterSynHandler centerHandler;
     @Override
     @PostConstruct
@@ -63,6 +66,7 @@ public class CenterSynThriftServer implements IThriftServer {
             args.processorFactory(processorFactory);
 //            args.processorFactory(new TProcessorFactory(processor));
             server = new TThreadPoolServer(args);
+            server.setServerEventHandler(dcServerEventHandler);
         } catch (TTransportException e) {
             log.error("thrift server start error" + e.getMessage());
             e.printStackTrace();

@@ -36,12 +36,9 @@ class Iface(idl.BaseService.Iface):
         """
         pass
 
-    def removeNode(self, ip):
+    def removeNode(self):
         """
         removeNode
-
-        Parameters:
-         - ip
         """
         pass
 
@@ -133,20 +130,16 @@ class Client(idl.BaseService.Client, Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "updateNodeInfo failed: unknown result")
 
-    def removeNode(self, ip):
+    def removeNode(self):
         """
         removeNode
-
-        Parameters:
-         - ip
         """
-        self.send_removeNode(ip)
+        self.send_removeNode()
         return self.recv_removeNode()
 
-    def send_removeNode(self, ip):
+    def send_removeNode(self):
         self._oprot.writeMessageBegin('removeNode', TMessageType.CALL, self._seqid)
         args = removeNode_args()
-        args.ip = ip
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -297,7 +290,7 @@ class Processor(idl.BaseService.Processor, Iface, TProcessor):
         iprot.readMessageEnd()
         result = removeNode_result()
         try:
-            result.success = self._handler.removeNode(args.ip)
+            result.success = self._handler.removeNode()
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -606,18 +599,9 @@ class updateNodeInfo_result(object):
 
 
 class removeNode_args(object):
-    """
-    Attributes:
-     - ip
-    """
 
     thrift_spec = (
-        None,  # 0
-        (1, TType.STRING, 'ip', 'UTF8', None, ),  # 1
     )
-
-    def __init__(self, ip=None,):
-        self.ip = ip
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -628,11 +612,6 @@ class removeNode_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
-            if fid == 1:
-                if ftype == TType.STRING:
-                    self.ip = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -643,10 +622,6 @@ class removeNode_args(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('removeNode_args')
-        if self.ip is not None:
-            oprot.writeFieldBegin('ip', TType.STRING, 1)
-            oprot.writeString(self.ip.encode('utf-8') if sys.version_info[0] == 2 else self.ip)
-            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 

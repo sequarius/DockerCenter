@@ -25,6 +25,8 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
     @Resource
     CommandService commandService;
 
+
+
     @Override
     public CommonResultDTO registerNode(NodeInfoDTO nodeInfoDTO, String s) throws TException {
         log.debug("node infoDTO=={},code=={}",nodeInfoDTO,s);
@@ -37,12 +39,16 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
 
     @Override
     public CommonResultDTO updateNodeInfo(NodeInfoDTO nodeInfoDTO) throws TException {
-        return null;
+        CommonResult commonResult = centerService.updateNodeInfo(nodeInfoDTO);
+        CommonResultDTO commonResultDTO = new CommonResultDTO();
+        BeanUtils.copyProperties(commonResult, commonResultDTO);
+
+        return commonResultDTO;
     }
 
     @Override
-    public CommonResultDTO removeNode(String ip) throws TException {
-        CommonResult commonResult = centerService.removeNodeInfoByIp(ip);
+    public CommonResultDTO removeNode() throws TException {
+        CommonResult commonResult = centerService.removeNodeInfoByTag();
         CommonResultDTO commonResultDTO = new CommonResultDTO();
         BeanUtils.copyProperties(commonResult, commonResultDTO);
         return commonResultDTO;

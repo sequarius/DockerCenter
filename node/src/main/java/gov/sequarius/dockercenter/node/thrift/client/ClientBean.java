@@ -51,13 +51,13 @@ public class ClientBean {
     }
 
     @Bean
-    public CenterSynRPCService.Client centerSynClient(){
+    public TSocket tSocket(){
         TSocket tSocket = new TSocket(THRIFT_SERVER_IP, SYN_THRIFT_SERVER_PORT);
-        try {
-            tSocket.open();
-        } catch (TTransportException e) {
-            log.error(e.getMessage(),e);
-        }
+        return tSocket;
+    }
+
+    @Bean
+    public CenterSynRPCService.Client centerSynClient(TSocket tSocket){
         CenterSynRPCService.Client client = new CenterSynRPCService.Client(new TBinaryProtocol(tSocket));
         log.info("syn client init successfully");
         return client;

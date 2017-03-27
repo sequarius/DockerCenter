@@ -45,7 +45,7 @@ public class CenterRPCTest {
             TSocket tSocket1 = new TSocket("127.0.0.1", 9047);
             tSocket1.open();
             CenterSynRPCService.Client client2 = new CenterSynRPCService.Client(new TBinaryProtocol(tSocket1));
-            CommonResultDTO commonResultDTO = client2.removeNode("99999999");
+            CommonResultDTO commonResultDTO = client2.removeNode();
             log.debug("result=={}",commonResultDTO);
             Thread.sleep(5000);
         }

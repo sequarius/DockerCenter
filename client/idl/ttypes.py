@@ -18,17 +18,23 @@ class CommonException(TException):
     Attributes:
      - code
      - message
+     - nodeTag
+     - commandTag
     """
 
     thrift_spec = (
         None,  # 0
         (1, TType.I32, 'code', None, None, ),  # 1
         (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
+        (3, TType.I32, 'nodeTag', None, None, ),  # 3
+        (4, TType.I32, 'commandTag', None, None, ),  # 4
     )
 
-    def __init__(self, code=None, message=None,):
+    def __init__(self, code=None, message=None, nodeTag=None, commandTag=None,):
         self.code = code
         self.message = message
+        self.nodeTag = nodeTag
+        self.commandTag = commandTag
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -49,6 +55,16 @@ class CommonException(TException):
                     self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I32:
+                    self.nodeTag = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.commandTag = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -66,6 +82,14 @@ class CommonException(TException):
         if self.message is not None:
             oprot.writeFieldBegin('message', TType.STRING, 2)
             oprot.writeString(self.message.encode('utf-8') if sys.version_info[0] == 2 else self.message)
+            oprot.writeFieldEnd()
+        if self.nodeTag is not None:
+            oprot.writeFieldBegin('nodeTag', TType.I32, 3)
+            oprot.writeI32(self.nodeTag)
+            oprot.writeFieldEnd()
+        if self.commandTag is not None:
+            oprot.writeFieldBegin('commandTag', TType.I32, 4)
+            oprot.writeI32(self.commandTag)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -306,6 +330,8 @@ class CommonResultDTO(object):
      - resultCode
      - result
      - message
+     - nodeTag
+     - commandTag
     """
 
     thrift_spec = (
@@ -313,12 +339,16 @@ class CommonResultDTO(object):
         (1, TType.I32, 'resultCode', None, None, ),  # 1
         (2, TType.BOOL, 'result', None, None, ),  # 2
         (3, TType.STRING, 'message', 'UTF8', None, ),  # 3
+        (4, TType.I32, 'nodeTag', None, None, ),  # 4
+        (5, TType.I32, 'commandTag', None, None, ),  # 5
     )
 
-    def __init__(self, resultCode=None, result=None, message=None,):
+    def __init__(self, resultCode=None, result=None, message=None, nodeTag=None, commandTag=None,):
         self.resultCode = resultCode
         self.result = result
         self.message = message
+        self.nodeTag = nodeTag
+        self.commandTag = commandTag
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -344,6 +374,16 @@ class CommonResultDTO(object):
                     self.message = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.nodeTag = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.I32:
+                    self.commandTag = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -365,6 +405,14 @@ class CommonResultDTO(object):
         if self.message is not None:
             oprot.writeFieldBegin('message', TType.STRING, 3)
             oprot.writeString(self.message.encode('utf-8') if sys.version_info[0] == 2 else self.message)
+            oprot.writeFieldEnd()
+        if self.nodeTag is not None:
+            oprot.writeFieldBegin('nodeTag', TType.I32, 4)
+            oprot.writeI32(self.nodeTag)
+            oprot.writeFieldEnd()
+        if self.commandTag is not None:
+            oprot.writeFieldBegin('commandTag', TType.I32, 5)
+            oprot.writeI32(self.commandTag)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -567,8 +615,6 @@ class NodeInfoDTO(object):
         oprot.writeStructEnd()
 
     def validate(self):
-        if self.ip is None:
-            raise TProtocolException(message='Required field ip is unset!')
         return
 
     def __repr__(self):
