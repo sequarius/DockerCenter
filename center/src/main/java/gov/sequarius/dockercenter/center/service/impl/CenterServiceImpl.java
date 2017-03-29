@@ -109,6 +109,7 @@ public class CenterServiceImpl implements CenterService {
         String nodeIp=dcServerEventHandler.getSocketByThradId(Thread.currentThread().getId()).getInetAddress().getHostAddress();
         NodeInfoDTO nodeInfo = ipNodeTable.get(nodeIp);
         nodeInfoDTO.setIp(nodeIp);
+        nodeInfoDTO.setTag(nodeInfo.getTag());
         nodeInfoDTO.setResponseTime(System.currentTimeMillis()-nodeInfo.getCallTime());
         if(nodeInfo==null){
             return CommonResult.result(false,"cant update node info because node hadn't register yet, try call " +
