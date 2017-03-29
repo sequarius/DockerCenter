@@ -13,7 +13,7 @@ sys.path.append("./idl")
 docker_center_command = ['node-list', 'help', 'version']
 docker_center_param_name = ['--node-tag']
 
-BILLION=1000000000
+BILLION = 100000000
 
 
 def execute_command(dc_command):
@@ -54,6 +54,16 @@ def parse_param(args):
     return dc_command
 
 
+# def get_docker_engine_version(version_str):
+#     lines = version_str.split('\n')
+#     for i, line in enumerate(lines):
+#         if "Server:" not in line:
+#             continue
+#         if "Version:" in lines[i + 1]:
+#             return lines[i + 1].replace("Version:", "").strip()
+#     return "UNKNOWN"
+
+
 def get_node_info():
     try:
         transport = TSocket.TSocket('localhost', 9047)
@@ -62,12 +72,14 @@ def get_node_info():
         client = CenterSynRPCService.Client(protocol)
         transport.open()
         result = client.getNodeMap()
+        transport.close()
         x = PrettyTable(["Tag", "Name", "Node Ip", "version", "status", "Architecture", "Free Disk", "Free Memory",
                          "Response Time", "Container Running/Total"])
         for node in result.values():
-            print(node)
-            x.add_row([node.tag, node.name, node.ip, node.dockerVersion, node.dockerStatus, node.architecture,
-                       node.freeDiskSpace/BILLION, node.freeMemorySpace/BILLION, node.responseTime, str(node.RunningContainerCount)
+            x.add_row([node.tag, node.name, node.ip, node.dockerVersion, node.dockerStatus,
+                       node.architecture,
+                       node.freeDiskSpace / BILLION, node.freeMemorySpace / BILLION, node.responseTime,
+                       str(node.RunningContainerCount)
                        + '/' + str(node.containerCount)])
         print(x)
     except Thrift.TException as e:

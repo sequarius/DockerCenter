@@ -11,12 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Resource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -68,6 +70,14 @@ public class DockerCenterNodeApplicationTests {
     public void testUpdateNode(){
         Boolean result = nodeService.updateNodeInfo();
         log.debug("result=={}",result);
+    }
+
+    @Test
+    public void xmlTest(){
+        Yaml yaml = new Yaml();
+        Map<String,Object> dockerInfo =(Map<String,Object>)yaml.load("a: 1\nb: 2\nc:\n  - aaa\n  - bbb");
+
+        System.out.println(dockerInfo.get("a"));
     }
 
 

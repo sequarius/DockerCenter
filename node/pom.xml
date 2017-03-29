@@ -59,6 +59,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.18</version>
+		</dependency>
+		<dependency>
 			<groupId>gov.sequarius</groupId>
 			<artifactId>dockercenter.common</artifactId>
 			<version>${common.package.version}</version>

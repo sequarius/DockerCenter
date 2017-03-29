@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -23,7 +24,11 @@ public class CommandServiceImpl implements CommandService {
         ExecuteResultDTO resultDTO = new ExecuteResultDTO();
         resultDTO.setCommandTag(command.getCommandTag());
         resultDTO.setNodeTag(command.getNodeTag());
+        if(command.getParams()==null){
+            command.setParams(new ArrayList<>());
+        }
         LinkedList<String> params = new LinkedList<>(command.getParams());
+        params.addFirst(command.getCommand());
         params.addFirst("docker");
 
         String[] paramArray = new String[params.size()];
@@ -35,6 +40,7 @@ public class CommandServiceImpl implements CommandService {
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(paramArray);
+            log.debug("param array=={}",paramArray);
         } catch (IOException e) {
             resultDTO.setResultCode(-1);
             resultDTO.setReturnMessage(e.getMessage());
@@ -48,12 +54,19 @@ public class CommandServiceImpl implements CommandService {
             StringBuilder sb = new StringBuilder();
             String consoleLine;
             while ((consoleLine = bufferedReader.readLine()) != null) {
-                sb.append(consoleLine);
+                sb.append(consoleLine).append("\n");
             }
+            p.waitFor();
             resultDTO.setResultCode(p.exitValue());
+            log.debug("result=={}",sb.toString());
             resultDTO.setReturnMessage(sb.toString());
             return resultDTO;
         } catch (IOException e) {
+            resultDTO.setResultCode(-1);
+            resultDTO.setReturnMessage(e.getMessage());
+            log.warn(e.getMessage(), e);
+            return resultDTO;
+        } catch (InterruptedException e) {
             resultDTO.setResultCode(-1);
             resultDTO.setReturnMessage(e.getMessage());
             log.warn(e.getMessage(), e);

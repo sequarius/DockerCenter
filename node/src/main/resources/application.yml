@@ -1,6 +1,6 @@
 thrift:
   server:
-    ip: 127.0.0.1
+    ip: 192.168.30.1
     syn:
       port: 9047
     asyn:
