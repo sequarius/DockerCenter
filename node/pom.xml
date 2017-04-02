@@ -74,6 +74,18 @@
 			<artifactId>libthrift</artifactId>
 			<version>0.10.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>0.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.28</version>
+		</dependency>
 	</dependencies>
 
 	<build>

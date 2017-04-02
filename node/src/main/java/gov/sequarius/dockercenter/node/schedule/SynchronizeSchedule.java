@@ -1,6 +1,6 @@
-package gov.sequarius.dockercenter.node.thrift.schedule;
+package gov.sequarius.dockercenter.node.schedule;
 
-import gov.sequarius.dockercenter.node.thrift.service.NodeService;
+import gov.sequarius.dockercenter.node.service.NodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

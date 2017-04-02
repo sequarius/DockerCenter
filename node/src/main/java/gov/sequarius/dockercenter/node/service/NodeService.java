@@ -1,4 +1,4 @@
-package gov.sequarius.dockercenter.node.thrift.service;
+package gov.sequarius.dockercenter.node.service;
 
 /**
  * Created by Sequarius on 2017/3/26.

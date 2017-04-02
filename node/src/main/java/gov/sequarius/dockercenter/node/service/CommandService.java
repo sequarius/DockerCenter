@@ -1,4 +1,4 @@
-package gov.sequarius.dockercenter.node.thrift.service;
+package gov.sequarius.dockercenter.node.service;
 
 import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;

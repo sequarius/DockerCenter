@@ -4,7 +4,7 @@ import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
 import gov.sequarius.dockercenter.common.rpc.NodeRPCService;
-import gov.sequarius.dockercenter.node.thrift.service.CommandService;
+import gov.sequarius.dockercenter.node.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.springframework.stereotype.Component;

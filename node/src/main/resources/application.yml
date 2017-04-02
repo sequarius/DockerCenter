@@ -5,6 +5,10 @@ thrift:
       port: 9047
     asyn:
       port: 9147
+gov:
+  sequarius:
+    docker_center:
+      file_path: d://test
 logging:
   level:
     root: info

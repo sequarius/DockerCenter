@@ -4,7 +4,7 @@ import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CenterSynRPCService;
 import gov.sequarius.dockercenter.common.rpc.CommonResultDTO;
 import gov.sequarius.dockercenter.common.rpc.NodeInfoDTO;
-import gov.sequarius.dockercenter.node.thrift.service.NodeService;
+import gov.sequarius.dockercenter.node.service.NodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.junit.Test;

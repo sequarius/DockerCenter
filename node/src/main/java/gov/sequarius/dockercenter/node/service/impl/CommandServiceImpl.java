@@ -1,8 +1,8 @@
-package gov.sequarius.dockercenter.node.thrift.service.impl;
+package gov.sequarius.dockercenter.node.service.impl;
 
 import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
-import gov.sequarius.dockercenter.node.thrift.service.CommandService;
+import gov.sequarius.dockercenter.node.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

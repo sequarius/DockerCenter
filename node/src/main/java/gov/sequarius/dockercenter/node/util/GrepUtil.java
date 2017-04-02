@@ -1,4 +1,4 @@
-package gov.sequarius.dockercenter.node.thrift.util;
+package gov.sequarius.dockercenter.node.util;
 
 import java.util.HashMap;
 import java.util.Map;
