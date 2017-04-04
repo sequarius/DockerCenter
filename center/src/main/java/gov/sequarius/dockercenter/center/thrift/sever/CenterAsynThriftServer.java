@@ -1,16 +1,14 @@
 package gov.sequarius.dockercenter.center.thrift.sever;
 
-import gov.sequarius.dockercenter.center.thrift.handler.CenterHandler;
-import gov.sequarius.dockercenter.common.rpc.CenterService;
-import gov.sequarius.dockercenter.server.IThriftServer;
+import gov.sequarius.dockercenter.center.thrift.handler.CenterAsynHandler;
+import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
+import gov.sequarius.dockercenter.common.rpc.NodeRPCService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.TProcessorFactory;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
-import org.apache.thrift.transport.TTransportFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +21,17 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Component
-public class CenterThriftServer implements IThriftServer {
+public class CenterAsynThriftServer implements IThriftServer {
     private TServer server;
-    @Value("${thrift.server.name}")
+    @Value("${thrift.server.asyn.name}")
     private String thriftServerName;
-    @Value("${thrift.server.port}")
+    @Value("${thrift.server.asyn.port}")
     private int thriftServerPort;
 
     @Resource
-    private CenterHandler centerHandler;
+    private CenterAsynHandler centerHandler;
+    private BoostTProcessorFactory boostTProcessorFactory;
+
     @Override
     @PostConstruct
     public void start() {
@@ -58,11 +58,14 @@ public class CenterThriftServer implements IThriftServer {
         try {
             log.info("start thrift server " + thriftServerName + " on port " + thriftServerPort);
             TServer.Args args = new TServer.Args(new TServerSocket(thriftServerPort));
-            TMultiplexedProcessor processor = new TMultiplexedProcessor();
-            processor.registerProcessor("CenterService", new CenterService.Processor(centerHandler));
-            args.transportFactory(new TTransportFactory());
-            args.processor(processor);
-            args.processorFactory(new TProcessorFactory(processor));
+//            TMultiplexedProcessor processor = new TMultiplexedProcessor();
+            TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
+            boostTProcessorFactory = new BoostTProcessorFactory(new CenterAsynRPCService.Processor
+                    (centerHandler));
+//            processor.registerProcessor("CenterRPCService", new CenterRPCService.Processor(centerHandler));
+            args.protocolFactory(protocolFactory);
+            args.processorFactory(boostTProcessorFactory);
+//            args.processorFactory(new TProcessorFactory(processor));
             server = new TSimpleServer(args);
         } catch (TTransportException e) {
             log.error("thrift server start error" + e.getMessage());
@@ -71,6 +74,9 @@ public class CenterThriftServer implements IThriftServer {
         }
     }
 
+    public NodeRPCService.Client selectClientByIp(String ip){
+        return boostTProcessorFactory.selectClientByIp(ip);
+    }
     @Override
     public void stop() {
         if (server != null && server.isServing()) {

@@ -1,72 +1,98 @@
-namespace java gov.sequarius.dockercenter.rpc
+namespace java gov.sequarius.dockercenter.common.rpc
+namespace cpp dockercenter
+
+
+const map<i32,string> RESPONSE_CODE_MAP={
+    0:"SUCCESS",
+    -0xFF00FFF:"UNDEFINED CODE",
+    401:"UNAUTHORIZED NODE"
+}
 
 exception CommonException {
     1: required i32 code,
-    2: string message
+    2: optional string message
+    3: optional i32 nodeTag
+    4: optional i32 commandTag
 }
 
-struct ResultDTO{
-    1: required bool result,
-    2: string message,
-    3: string code,
-    4: string commandExcResult
+struct ExecuteResultDTO{
+    1: string returnMessage,
+    2: required i32 resultCode,
+    3: optional i32 nodeTag,
+    4: optional i32 commandTag
 }
-
 
 /**
-* 节点信息DTO
-**/
-struct NodeInfoDTO {
-    /** 名称 */
-    1:string name,
-    /** ip */
-    2:string ip,
-    /** 操作系统类型 */
-    3:string architecture,
-    /** 剩余磁盘空间 (kb) */
-	4:i64 freeDiskSpace,
-	/** 剩余内存空间 (kb) */
-	5:i64 freeMemorySpace,
-	/** 响应时间(ms)*/
-	6:i64 responseTime,
-	/** 容器数量*/
-	7:i64 containerCount,
-	/** 正在运行容器数量*/
-	8:i64 RunningContainerCount,
-	/** docker 版本信息 */
-    9:string dockerVersion,
-    /** docker 状态 */
-    10:string dockerStatus
-}
-/**
-* 执行命令dto
+* command dto
 **/
 struct CommandDTO{
-    /** 命令 */
-    1:string command ,
-    /** 参数 */
-    2:list<string> params
+    /** command */
+    1:required string command ,
+    /** params */
+    2:list<string> params,
+    /** execute tag*/
+    3: optional i32 nodeTag,
+    /** command tag*/
+    4: optional i32 commandTag
 }
 
 /**
-* 基础服务
+* command Result dto
 **/
+struct CommonResultDTO{
+    1: required i32 resultCode,
+    2: bool result,
+    3: optional string message
+    4: optional i32 nodeTag,
+    5: optional i32 commandTag
+}
+
+/**
+* node info dto
+**/
+struct NodeInfoDTO {
+    1:string name,
+    2:optional string ip,
+    3:string architecture,
+	4:i64 freeDiskSpace,
+	5:i64 freeMemorySpace,
+	6:i64 responseTime,
+	7:i64 containerCount,
+	8:i64 RunningContainerCount,
+    9:string dockerVersion,
+    10:string dockerStatus
+    11:optional i32 tag
+    12:i64 callTime
+}
+
+
+
 service BaseService{
 
 }
-/**
-* 中心节点服务
-**/
-service CenterService extends BaseService{
-    /** 注册节点*/
-    ResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
+
+
+service CenterSynRPCService extends BaseService{
+    /** registerNode*/
+    CommonResultDTO registerNode(1:NodeInfoDTO nodeInfo,2:string authCode);
+    /** updateNodeInfo*/
+    CommonResultDTO updateNodeInfo(1:NodeInfoDTO nodeInfo);
+    /** removeNode*/
+    CommonResultDTO removeNode();
+    /** getNodeMap */
+    map<string,NodeInfoDTO> getNodeMap();
+    /** executeCommand*/
+    ExecuteResultDTO executeCommand(1:CommandDTO dto);
 }
-/**
-* 子节点服务
-**/
-service NodeService extends BaseService{
-    /** 在子节点执行命令*/
-    ResultDTO exctueCommand(1:CommandDTO dto);
-    /** 获取子节点信息*/
-    NodeInfoDTO getNodeInfo();
+
+service CenterAsynRPCService{
+    /**connet */
+    oneway void connet();
+    /**call back when excute command finish*/
+    oneway void onCommandExcuteFinish(1:ExecuteResultDTO executeResultDTO);
+}
+
+service NodeRPCService extends BaseService{
+    /** run command on node*/
+    oneway void exctueCommand(1:CommandDTO dto);
 }

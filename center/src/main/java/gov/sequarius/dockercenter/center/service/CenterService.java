@@ -1,13 +1,22 @@
 package gov.sequarius.dockercenter.center.service;
 
+
+import gov.sequarius.dockercenter.common.domain.CommonResult;
 import gov.sequarius.dockercenter.common.rpc.NodeInfoDTO;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sequarius on 2017/3/17.
  */
 public interface CenterService {
-    List<NodeInfoDTO> getNodeInfoDtos();
-    boolean registerNodeInfo(NodeInfoDTO nodeInfoDTO);
+    CommonResult registerNodeInfo(NodeInfoDTO nodeInfoDTO);
+
+    CommonResult removeNodeInfoByTag();
+
+    Map<String, NodeInfoDTO> getNodeInfoMap();
+
+    NodeInfoDTO findNodeByTag(Integer tag);
+
+    CommonResult updateNodeInfo(NodeInfoDTO nodeInfoDTO);
 }

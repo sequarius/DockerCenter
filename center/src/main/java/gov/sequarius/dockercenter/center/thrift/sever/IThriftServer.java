@@ -1,28 +1,28 @@
-package gov.sequarius.dockercenter.server;
+package gov.sequarius.dockercenter.center.thrift.sever;
 
 /**
  * Created by Sequarius on 2017/3/14.
  */
 /**
- * Thrift服务器接口
+ * Thrift Server
  *
  */
 public interface IThriftServer {
 
     /**
-     * 启动Thrift服务器
+     * start thrift server
      */
-    public void start();
+     void start();
 
     /**
-     * 停止Thrift服务器
+     * stop thrift server
      */
-    public void stop();
+    void stop();
 
     /**
-     * Thrift服务器是否运行
+     * check thrift
      */
-    public boolean isServing();
+    boolean isServing();
 
     /**
      * 获取Thrift服务器名称
