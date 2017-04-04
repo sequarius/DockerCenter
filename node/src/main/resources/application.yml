@@ -8,7 +8,7 @@ thrift:
 gov:
   sequarius:
     docker_center:
-      file_path: d://test
+      file_path: config
 logging:
   level:
     root: info

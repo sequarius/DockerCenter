@@ -67,7 +67,15 @@ public class NodeServiceImpl implements NodeService {
             nodeName = faker.name().fullName();
             JSONObject obj=new JSONObject();
             obj.put(NODE_NAME,nodeName);
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    log.error(e.getMessage(),e);
+                }
+            }
             try (FileOutputStream outputStream = new FileOutputStream(file)){
+
                 outputStream.write(obj.toJSONString().getBytes());
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage(),e);
