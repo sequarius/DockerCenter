@@ -6,7 +6,7 @@
 
     <groupId>gov.sequarius</groupId>
     <artifactId>dockercenter.common</artifactId>
-    <version>0.0.19</version>
+    <version>0.0.20</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

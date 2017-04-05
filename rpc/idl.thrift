@@ -47,6 +47,15 @@ struct CommonResultDTO{
     5: optional i32 commandTag
 }
 
+struct JobDTO{
+    1: required string jobname,
+    2: optional string jobId,
+    3: optional string status,
+    4: optional string deployStrategy,
+    5: optional string subNameStrategy,
+    6: optional string config,
+}
+
 /**
 * node info dto
 **/
@@ -83,6 +92,11 @@ service CenterSynRPCService extends BaseService{
     map<string,NodeInfoDTO> getNodeMap();
     /** executeCommand*/
     ExecuteResultDTO executeCommand(1:CommandDTO dto);
+    CommonResultDTO newJob(1:string jobName);
+    JobDTO getJobStatus(1:string jobName);
+    CommonResultDTO startJob(1:string jobName);
+    CommonResultDTO stopJob(1:string jobName);
+    list<JobDTO> getJoblist();
 }
 
 service CenterAsynRPCService{
