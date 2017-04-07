@@ -1,6 +1,7 @@
 package gov.sequarius.dockercenter.center;
 
 import gov.sequarius.dockercenter.center.service.CenterService;
+import gov.sequarius.dockercenter.center.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,8 @@ import javax.annotation.Resource;
 public class DockercenterCenterApplicationTests {
 
 	@Resource
+	JobService jobService;
+	@Resource
 	private CenterService centerService;
 	@Test
 	public void contextLoads() {
@@ -23,7 +26,7 @@ public class DockercenterCenterApplicationTests {
 
 	@Test
 	public void testGetAll(){
-//      	centerService.getNodeInfoDtos();
+		jobService.createJob("aaa");
     }
 
 }

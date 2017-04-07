@@ -1,0 +1,43 @@
+{
+  "name": "nginx",
+  "id": 1588,
+  "deploy_strategy": "spread|binpack|random|perfer_node",
+  "sub_name_strategy": "uuid|increase_id|",
+  "image_name": "nginx:1478",
+  "stop": {
+    "condtion": [
+      "stop_condition"
+    ],
+    "pre_steps": "noa",
+    "post_steps": "noa",
+    "command_param": [
+      ""
+    ]
+  },
+  "start": {
+    "condtion": [
+      "start_condition"
+    ],
+    "pre_steps": "noa",
+    "post_steps": "noa",
+    "command_param": [
+      ""
+    ]
+  },
+  "condittions": {
+    "start_condit": {
+      "delay": 5000,
+      "memroy_avg": {
+        "above": -1,
+        "below": -1
+      },
+      "cpu_avg": {
+        "above": -1,
+        "below": -1
+      },
+      "schedule": {
+        "cron": "dog"
+      }
+    }
+  }
+}

@@ -49,7 +49,7 @@ public class CenterSynThriftServer implements IThriftServer {
                 return;
             }
             Executors.newSingleThreadExecutor().execute(() -> server.serve());
-            log.info("thrift server[" + thriftServerName + "] start complete! port==" + thriftServerPort);
+            log.info("thrift Syn server[" + thriftServerName + "] start complete! port==" + thriftServerPort);
         } else {
             log.warn("Starting thrift server failed !");
         }

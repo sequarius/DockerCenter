@@ -48,7 +48,7 @@ public class CenterAsynThriftServer implements IThriftServer {
                 return;
             }
             Executors.newSingleThreadExecutor().execute(() -> server.serve());
-            log.info("thrift server[" + thriftServerName + "] start complete! port==" + thriftServerPort);
+            log.info("thrift Asyn server[" + thriftServerName + "] start complete! port==" + thriftServerPort);
         } else {
             log.warn("Starting thrift server failed !");
         }

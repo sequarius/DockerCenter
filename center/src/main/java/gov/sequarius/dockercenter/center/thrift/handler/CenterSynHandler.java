@@ -3,6 +3,7 @@ package gov.sequarius.dockercenter.center.thrift.handler;
 
 import gov.sequarius.dockercenter.center.service.CenterService;
 import gov.sequarius.dockercenter.center.service.CommandService;
+import gov.sequarius.dockercenter.center.service.JobService;
 import gov.sequarius.dockercenter.common.domain.CommonResult;
 import gov.sequarius.dockercenter.common.rpc.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +26,9 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
 
     @Resource
     CommandService commandService;
+
+    @Resource
+    JobService jobService;
 
 
 
@@ -62,6 +67,31 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
     @Override
     public ExecuteResultDTO executeCommand(CommandDTO commandDTO) throws TException {
         return commandService.callCommand(commandDTO);
+    }
+
+    @Override
+    public CommonResultDTO newJob(String s) throws TException {
+        return jobService.createJob(s);
+    }
+
+    @Override
+    public JobDTO getJobStatus(String s) throws TException {
+        return null;
+    }
+
+    @Override
+    public CommonResultDTO startJob(String s) throws TException {
+        return null;
+    }
+
+    @Override
+    public CommonResultDTO stopJob(String s) throws TException {
+        return null;
+    }
+
+    @Override
+    public List<JobDTO> getJoblist() throws TException {
+        return null;
     }
 
 
