@@ -1,5 +1,6 @@
 package gov.sequarius.dockercenter.center;
 
+import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.center.service.CenterService;
 import gov.sequarius.dockercenter.center.service.JobService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,18 +16,25 @@ import javax.annotation.Resource;
 @Slf4j
 public class DockercenterCenterApplicationTests {
 
-	@Resource
-	JobService jobService;
-	@Resource
-	private CenterService centerService;
-	@Test
-	public void contextLoads() {
+    @Resource
+    JobService jobService;
+    @Resource
+    private CenterService centerService;
 
-	}
+    @Test
+    public void contextLoads() {
 
-	@Test
-	public void testGetAll(){
-		jobService.createJob("aaa");
+    }
+
+    @Test
+    public void testGetAll() {
+        jobService.createJob("aaa");
+    }
+
+    @Test
+    public void testGet() {
+        JobConfig aaa = jobService.getJob("aaa");
+        log.debug("job=={}",aaa);
     }
 
 }

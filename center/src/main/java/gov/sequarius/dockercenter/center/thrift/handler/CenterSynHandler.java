@@ -70,22 +70,22 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
     }
 
     @Override
-    public CommonResultDTO newJob(String s) throws TException {
-        return jobService.createJob(s);
+    public CommonResultDTO newJob(String jobName) throws TException {
+        return jobService.createJob(jobName);
     }
 
     @Override
-    public JobDTO getJobStatus(String s) throws TException {
+    public JobDTO getJobStatus(String jobName) throws TException {
         return null;
     }
 
     @Override
-    public CommonResultDTO startJob(String s) throws TException {
+    public CommonResultDTO startJob(String jobName) throws TException {
         return null;
     }
 
     @Override
-    public CommonResultDTO stopJob(String s) throws TException {
+    public CommonResultDTO stopJob(String jobName) throws TException {
         return null;
     }
 

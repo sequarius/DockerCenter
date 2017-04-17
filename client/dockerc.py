@@ -10,7 +10,7 @@ from prettytable import PrettyTable
 
 sys.path.append("./idl")
 
-docker_center_command = ['node-list', 'help', 'version']
+docker_center_command = ['node-list', "create-job", 'help', 'version']
 docker_center_param_name = ['--node-tag']
 
 BILLION = 100000000
@@ -86,6 +86,21 @@ def get_node_info():
         print(e)
 
 
+def create_job(job_name):
+    try:
+        print(job_name)
+        transport = TSocket.TSocket('localhost', 9047)
+        transport = TTransport.TBufferedTransport(transport)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = CenterSynRPCService.Client(protocol)
+        transport.open()
+        result = client.newJob(job_name)
+        transport.close()
+        print(result.message)
+    except Thrift.TException as e:
+        print(e)
+
+
 if __name__ == '__main__':
     command = parse_param(sys.argv)
     if command.command not in docker_center_command:
@@ -93,3 +108,9 @@ if __name__ == '__main__':
     else:
         if command.command == docker_center_command[0]:
             get_node_info()
+        if command.command == docker_center_command[1]:
+            if len(command.docker_params) != 1:
+                print("missing job name, try user dockerc help to get function use.")
+            else:
+                job_name = command.docker_params[0]
+                create_job(job_name)
