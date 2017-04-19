@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sequarius on 2017/4/7.
@@ -70,11 +72,29 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobConfig getJob(String jobName){
         File inputFile = new File(JOB_CONFIG_DIR, jobName + ".json");
+        return getJobConfig(inputFile);
+    }
+
+    @Override
+    public List<JobConfig> getJobs() {
+        File[] files = JOB_CONFIG_DIR.listFiles();
+        List<JobConfig> jobConfigs=new ArrayList<>();
+        for (File file : files) {
+            if(file.isDirectory()){
+                continue;
+            }
+            jobConfigs.add(getJobConfig(file));
+        }
+        return jobConfigs;
+    }
+
+    private JobConfig getJobConfig(File inputFile) {
         JSONReader reader = null;
         try {
             reader = new JSONReader(new FileReader(inputFile));
         } catch (FileNotFoundException e) {
             log.error(e.getMessage(),e);
+            return null;
         }
         String jsonString = reader.readString();
         JobConfig jobConfig = JSON.parseObject(jsonString, new TypeReference<JobConfig>() {
