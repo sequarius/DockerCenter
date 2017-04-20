@@ -1,7 +1,6 @@
 package gov.sequarius.dockercenter.center.thrift.handler;
 
 
-import com.alibaba.fastjson.JSON;
 import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.center.service.CenterService;
 import gov.sequarius.dockercenter.center.service.CommandService;
@@ -79,17 +78,17 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
 
     @Override
     public JobDTO getJobStatus(String jobName) throws TException {
-        return null;
+        return jobService.getJobStatus(jobName);
     }
 
     @Override
     public CommonResultDTO startJob(String jobName) throws TException {
-        return null;
+        return jobService.startJob(jobName);
     }
 
     @Override
     public CommonResultDTO stopJob(String jobName) throws TException {
-        return null;
+        return jobService.stopJob(jobName);
     }
 
     @Override
@@ -97,14 +96,7 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
         List<JobDTO> jobDTOs=new ArrayList<>();
         List<JobConfig> jobs = jobService.getJobs();
         for (JobConfig job : jobs) {
-            JobDTO jobDTO=new JobDTO();
-            jobDTO.setJobname(job.getName());
-            jobDTO.setJobId(String.valueOf(job.getId()));
-            jobDTO.setStatus("running");
-            jobDTO.setDeployStrategy(job.getDeployStrategy());
-            jobDTO.setSubNameStrategy(job.getSubNameStrategy());
-            jobDTO.setConfig(JSON.toJSONString(job));
-            jobDTOs.add(jobDTO);
+            jobDTOs.add(jobService.convertJobConfig(job));
         }
         return jobDTOs;
     }

@@ -6,9 +6,11 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import gov.sequarius.dockercenter.center.domain.Condition;
 import gov.sequarius.dockercenter.center.domain.JobConfig;
+import gov.sequarius.dockercenter.center.domain.JobStatus;
 import gov.sequarius.dockercenter.center.domain.Step;
 import gov.sequarius.dockercenter.center.service.JobService;
 import gov.sequarius.dockercenter.common.rpc.CommonResultDTO;
+import gov.sequarius.dockercenter.common.rpc.JobDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sequarius on 2017/4/7.
@@ -30,13 +34,18 @@ public class JobServiceImpl implements JobService {
 
     private File JOB_CONFIG_DIR;
 
+    private Map<String,String> jobStatus;
+
+
     @PostConstruct
     private void init() {
         JOB_CONFIG_DIR = new File(JOB_CONFIG_PATH);
         if (!JOB_CONFIG_DIR.exists()) {
             JOB_CONFIG_DIR.mkdir();
         }
+        jobStatus=new HashMap<>();
     }
+
 
     @Override
     public CommonResultDTO createJob(String jobName) {
@@ -88,8 +97,69 @@ public class JobServiceImpl implements JobService {
         return jobConfigs;
     }
 
+    @Override
+    public JobDTO convertJobConfig(JobConfig job) {
+        if(job==null){
+            return null;
+        }
+        JobDTO jobDTO=new JobDTO();
+        jobDTO.setJobname(job.getName());
+        jobDTO.setJobId(String.valueOf(job.getId()));
+        jobDTO.setStatus("running");
+        jobDTO.setDeployStrategy(job.getDeployStrategy());
+        jobDTO.setSubNameStrategy(job.getSubNameStrategy());
+        jobDTO.setConfig(JSON.toJSONString(job));
+        jobDTO.setStatus(jobStatus.get(job.getName())==null? JobStatus.CREATE.toString():jobStatus.get(job.getName()));
+        return jobDTO;
+    }
+
+    @Override
+    public JobDTO getJobStatus(String jobName) {
+        return convertJobConfig(getJob(jobName));
+    }
+
+    @Override
+    public CommonResultDTO startJob(String jobName) {
+        CommonResultDTO resultDTO=new CommonResultDTO();
+        JobDTO job = getJobStatus(jobName);
+        if(job==null){
+            resultDTO.setResult(false);
+            resultDTO.setMessage(String.join(jobName,"job "," is not existed!"));
+            return resultDTO;
+        }
+        if(job.getStatus().equals(JobStatus.RUNNING.toString())){
+            resultDTO.setResult(false);
+            resultDTO.setMessage(String.join(jobName,"job "," is already running!"));
+            return resultDTO;
+        }
+        this.jobStatus.put(jobName,JobStatus.RUNNING.toString());
+        resultDTO.setResult(true);
+        resultDTO.setMessage(String.join(jobName,"start job "," successfully"));
+        return resultDTO;
+    }
+
+    @Override
+    public CommonResultDTO stopJob(String jobName) {
+        CommonResultDTO resultDTO=new CommonResultDTO();
+        JobDTO job = getJobStatus(jobName);
+        if(job==null){
+            resultDTO.setResult(false);
+            resultDTO.setMessage(String.join(jobName,"job "," is not existed!"));
+            return resultDTO;
+        }
+        if(job.getStatus().equals(JobStatus.RUNNING.toString())){
+            resultDTO.setResult(false);
+            resultDTO.setMessage(String.join(jobName,"job "," is not running!"));
+            return resultDTO;
+        }
+        jobStatus.put(jobName,JobStatus.STOP.toString());
+        resultDTO.setResult(true);
+        resultDTO.setMessage(String.join(jobName,"stop job "," successfully"));
+        return resultDTO;
+    }
+
     private JobConfig getJobConfig(File inputFile) {
-        JSONReader reader = null;
+        JSONReader reader;
         try {
             reader = new JSONReader(new FileReader(inputFile));
         } catch (FileNotFoundException e) {
