@@ -58,14 +58,11 @@ public class CenterAsynThriftServer implements IThriftServer {
         try {
             log.info("start thrift server " + thriftServerName + " on port " + thriftServerPort);
             TServer.Args args = new TServer.Args(new TServerSocket(thriftServerPort));
-//            TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
             boostTProcessorFactory = new BoostTProcessorFactory(new CenterAsynRPCService.Processor
                     (centerHandler));
-//            processor.registerProcessor("CenterRPCService", new CenterRPCService.Processor(centerHandler));
             args.protocolFactory(protocolFactory);
             args.processorFactory(boostTProcessorFactory);
-//            args.processorFactory(new TProcessorFactory(processor));
             server = new TSimpleServer(args);
         } catch (TTransportException e) {
             log.error("thrift server start error" + e.getMessage());
