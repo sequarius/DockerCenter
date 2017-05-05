@@ -27,6 +27,7 @@ public class NodeHandler implements NodeRPCService.Iface {
         log.debug("command into=={}",commandDTO);
         ExecuteResultDTO resultDTO=commandService.executeCommandOnNode(commandDTO);
         resultDTO.setCommandTag(commandDTO.getCommandTag());
+        log.debug("result=={}",resultDTO);
         centerAsynClient.onCommandExcuteFinish(resultDTO);
     }
 }

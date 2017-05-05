@@ -113,7 +113,6 @@ public class NodeServiceImpl implements NodeService {
         ExecuteResultDTO resultDTO = commandService.executeCommandOnNode(commandDTO);
         if(resultDTO.getResultCode()==0) {
             Map<String, String> infoMap = GrepUtil.grepDockerInfo(resultDTO.getReturnMessage());
-            log.debug("return map=={}",infoMap);
             nodeInfoDTO.setDockerVersion(infoMap.get("Server Version"));
             nodeInfoDTO.setContainerCount(Long.valueOf(infoMap.get("Containers")));
             nodeInfoDTO.setRunningContainerCount(Long.valueOf(infoMap.get("Running")));

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +74,7 @@ public class JobServiceImpl implements JobService {
             return resultDTO;
         }
         resultDTO.setResult(true);
-        resultDTO.setMessage(String.format("config file %s create successfully",outputFile.getAbsolutePath()));
+        resultDTO.setMessage(String.format("config file %s create successfully",outputFile.getPath()));
 //        log.debug("file {} write finish", outputFile.getAbsolutePath());
         return resultDTO;
     }
@@ -159,6 +160,7 @@ public class JobServiceImpl implements JobService {
     }
 
     private JobConfig getJobConfig(File inputFile) {
+        log.debug("file=={}",inputFile.getAbsolutePath());
         JSONReader reader;
         try {
             reader = new JSONReader(new FileReader(inputFile));
@@ -166,7 +168,15 @@ public class JobServiceImpl implements JobService {
             log.error(e.getMessage(),e);
             return null;
         }
-        String jsonString = reader.readString();
+
+//        FileReader fileReader=new FileReader(inputFile);
+        log.debug("{}",reader);
+        String jsonString = null;
+        try {
+            jsonString = new String(Files.readAllBytes(inputFile.toPath()));
+        } catch (IOException e) {
+            log.error(e.getMessage(),e);
+        }
         JobConfig jobConfig = JSON.parseObject(jsonString, new TypeReference<JobConfig>() {
         });
         return jobConfig;

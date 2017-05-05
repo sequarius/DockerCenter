@@ -10,7 +10,7 @@ from prettytable import PrettyTable
 
 sys.path.append("./idl")
 
-docker_center_command = ['node-list', "create-job", "job-list", "start-job", "end-job", 'help', 'version']
+docker_center_command = ['node-list', "create-job", "job-list", "start-job", "stop-job", 'help', 'version']
 docker_center_param_name = ['--node-tag']
 
 BILLION = 100000000
@@ -18,7 +18,8 @@ BILLION = 100000000
 
 def execute_command(dc_command):
     try:
-        transport = TSocket.TSocket('localhost', 9047)
+        # transport = TSocket.TSocket('localhost', 9047)
+        transport = TSocket.TSocket('192.168.30.1', 9047)
         transport = TTransport.TBufferedTransport(transport)
         protocol = TBinaryProtocol.TBinaryProtocol(transport)
         client = CenterSynRPCService.Client(protocol)
@@ -168,3 +169,15 @@ if __name__ == '__main__':
             else:
                 job_name = command.docker_params[0]
                 stop_job(job_name)
+
+        if command.command == docker_center_command[5]:
+            print("node-tag ${node_tag}\t use this param to set the node to run command.")
+            print("node-list\t show all nodes registered in Docker Center.")
+            print("job-list\t show all jobs registered in Docker Center.")
+            print("create-job ${job_name}\t create a new job in Docker Center.")
+            print("start-job ${job_name}\t start a job in Docker Center.")
+            print("stop-job ${job_name}\t stop a job in Docker Center.")
+            print("log ${job_name}\t show all logs achieved of job ")
+            print("version\t show Docker Center current version.")
+        if command.command == docker_center_command[6]:
+            print("Docker Center 1.0.0")

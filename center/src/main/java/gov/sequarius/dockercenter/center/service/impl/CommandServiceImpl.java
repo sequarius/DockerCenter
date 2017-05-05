@@ -60,6 +60,7 @@ public class CommandServiceImpl implements CommandService {
                     String.valueOf(tag),"try use dockerc --node-list to confirm the right tag."));
             return executeResultDTO;
         }
+        log.debug("node =={}",nodeInfoDTO);
         NodeRPCService.Client client = centerAsynThriftServer.selectClientByIp(nodeInfoDTO.getIp());
         if(client==null) {
             executeResultDTO.setReturnMessage(new StringBuilder("cant find node ").append(nodeInfoDTO.getIp()).append
@@ -88,6 +89,7 @@ public class CommandServiceImpl implements CommandService {
 
     @Override
     public void onCommandExecuted(ExecuteResultDTO resultDTO) {
+        log.debug("result dot=={}",resultDTO);
         CountDownLatch countDownLatch = downLatchMap.get(resultDTO.getCommandTag());
         if(resultDTO==null){
             log.warn("received an unknown result=={}",resultDTO);
