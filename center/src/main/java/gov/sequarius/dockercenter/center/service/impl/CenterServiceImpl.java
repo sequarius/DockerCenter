@@ -55,7 +55,6 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public CommonResult registerNodeInfo(NodeInfoDTO nodeInfoDTO) {
-
         synchronized (this) {
             String nodeIp=dcServerEventHandler.getSocketByThradId(Thread.currentThread().getId()).getInetAddress().getHostAddress();
             nodeInfoDTO.setIp(nodeIp);

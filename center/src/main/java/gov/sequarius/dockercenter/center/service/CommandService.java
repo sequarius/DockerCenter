@@ -9,4 +9,8 @@ import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
 public interface CommandService {
     ExecuteResultDTO callCommand(CommandDTO command);
     void onCommandExecuted(ExecuteResultDTO result);
+
+    void startContainer(Integer minNodeTag, String nextContainer);
+
+    void stopContainer(Integer maxNodeTag);
 }
