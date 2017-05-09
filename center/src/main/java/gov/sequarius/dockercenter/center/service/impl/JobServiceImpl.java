@@ -8,6 +8,7 @@ import gov.sequarius.dockercenter.center.domain.Condition;
 import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.center.domain.JobStatus;
 import gov.sequarius.dockercenter.center.domain.Step;
+import gov.sequarius.dockercenter.center.service.CommandService;
 import gov.sequarius.dockercenter.center.service.JobService;
 import gov.sequarius.dockercenter.common.rpc.CommonResultDTO;
 import gov.sequarius.dockercenter.common.rpc.JobDTO;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class JobServiceImpl implements JobService {
 
     private Map<String,String> jobStatus;
 
+    @Resource
+    CommandService commandService;
 
     @PostConstruct
     private void init() {
@@ -133,6 +137,7 @@ public class JobServiceImpl implements JobService {
             resultDTO.setMessage(String.join(jobName,"job "," is already running!"));
             return resultDTO;
         }
+        commandService.startJob(getJob(jobName));
         this.jobStatus.put(jobName,JobStatus.RUNNING.toString());
         resultDTO.setResult(true);
         resultDTO.setMessage(String.join(jobName,"start job "," successfully"));
@@ -154,6 +159,7 @@ public class JobServiceImpl implements JobService {
             return resultDTO;
         }
         jobStatus.put(jobName,JobStatus.STOP.toString());
+        commandService.stoptJob(getJob(jobName).getId());
         resultDTO.setResult(true);
         resultDTO.setMessage(String.join(jobName,"stop job "," successfully"));
         return resultDTO;

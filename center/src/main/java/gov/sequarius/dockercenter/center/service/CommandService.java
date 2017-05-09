@@ -1,5 +1,6 @@
 package gov.sequarius.dockercenter.center.service;
 
+import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
 
@@ -13,4 +14,7 @@ public interface CommandService {
     void startContainer(Integer minNodeTag, String nextContainer);
 
     void stopContainer(Integer maxNodeTag);
+
+    void startJob(JobConfig jobConfig);
+    void stoptJob(Long  jobid);
 }
