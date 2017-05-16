@@ -99,6 +99,7 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public NodeInfoDTO findNodeByTag(Integer tag) {
+        log.debug("node tag=={}",tagNodeTable);
         NodeInfoDTO nodeInfoDTO = tagNodeTable.get(tag);
         return nodeInfoDTO;
     }

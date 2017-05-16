@@ -1,6 +1,7 @@
 package gov.sequarius.dockercenter.center.service.impl;
 
 import gov.sequarius.dockercenter.center.common.Constant;
+import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.center.service.CenterService;
 import gov.sequarius.dockercenter.center.service.CommandService;
 import gov.sequarius.dockercenter.center.support.DockerContext;
@@ -97,6 +98,26 @@ public class CommandServiceImpl implements CommandService {
         }
         resultMaps.put(resultDTO.getCommandTag(),resultDTO);
         countDownLatch.countDown();
+    }
+
+    @Override
+    public void startContainer(Integer minNodeTag, String nextContainer) {
+
+    }
+
+    @Override
+    public void stopContainer(Integer maxNodeTag) {
+
+    }
+
+    @Override
+    public void startJob(JobConfig jobConfig) {
+
+    }
+
+    @Override
+    public void stoptJob(Long jobid) {
+
     }
 
 
