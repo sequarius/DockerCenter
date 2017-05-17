@@ -6,7 +6,7 @@
 
     <groupId>gov.sequarius</groupId>
     <artifactId>dockercenter.common</artifactId>
-    <version>0.0.20</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,12 +24,12 @@
     <distributionManagement>
         <repository>
             <id>releases</id>
-            <url>http://112.74.62.45:18080/nexus/content/repositories/releases</url>
+            <url>http://nexus.sequarius.com/nexus/content/repositories/releases</url>
         </repository>
 
         <snapshotRepository>
             <id>snapshots</id>
-            <url>http://112.74.62.45:18080/nexus/content/repositories/snapshots</url>
+            <url>http://nexus.sequarius.com/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

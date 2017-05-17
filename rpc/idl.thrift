@@ -97,6 +97,7 @@ service CenterSynRPCService extends BaseService{
     CommonResultDTO startJob(1:string jobName);
     CommonResultDTO stopJob(1:string jobName);
     list<JobDTO> getJoblist();
+    CommonResultDTO uploadLog(1:binary log,2:i32 tagId);
 }
 
 service CenterAsynRPCService{
