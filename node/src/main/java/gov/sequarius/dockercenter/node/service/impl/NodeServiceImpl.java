@@ -19,6 +19,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.*;
 import java.lang.management.ManagementFactory;
+import java.nio.ByteBuffer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -32,6 +36,7 @@ public class NodeServiceImpl implements NodeService {
     @Resource
     CenterSynRPCService.Client centerSynClient;
 
+
     @Resource
     TSocket tSocket;
 
@@ -42,14 +47,22 @@ public class NodeServiceImpl implements NodeService {
 
     @Value("${gov.sequarius.docker_center.file_path}")
     private String OUTPUT_FILE_DIR_PATH;
+    @Value("${gov.sequarius.docker_center.log_path}")
+    private String DOCKER_LOG_DIR_PATH;
 
     private File OUTPUT_FILE_DIR;
+
+    private File DOCOCKER_LOG_DIR;
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 
     @Resource
     private Faker faker;
 
     @PostConstruct
-    private void init(){
+    private void init() {
+        DOCOCKER_LOG_DIR = new File(DOCKER_LOG_DIR_PATH);
         nodeInfoDTO = new NodeInfoDTO();
         Properties props = System.getProperties();
         String osName = props.getProperty("os.name");
@@ -61,28 +74,28 @@ public class NodeServiceImpl implements NodeService {
             OUTPUT_FILE_DIR.mkdir();
         }
         log.debug(OUTPUT_FILE_DIR_PATH);
-        File file=new File(OUTPUT_FILE_DIR,"config.json");
+        File file = new File(OUTPUT_FILE_DIR, "config.json");
         String nodeName;
-        if(!file.exists()){
+        if (!file.exists()) {
             nodeName = faker.name().fullName();
-            JSONObject obj=new JSONObject();
-            obj.put(NODE_NAME,nodeName);
+            JSONObject obj = new JSONObject();
+            obj.put(NODE_NAME, nodeName);
             if (!file.exists()) {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    log.error(e.getMessage(),e);
+                    log.error(e.getMessage(), e);
                 }
             }
-            try (FileOutputStream outputStream = new FileOutputStream(file)){
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
 
                 outputStream.write(obj.toJSONString().getBytes());
             } catch (FileNotFoundException e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             } catch (IOException e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             }
-        }else {
+        } else {
             JSONReader reader = null;
             try {
                 reader = new JSONReader(new FileReader(file));
@@ -91,32 +104,32 @@ public class NodeServiceImpl implements NodeService {
             }
             String jsonString = reader.readString();
             JSONObject jsonObject = JSON.parseObject(jsonString);
-            nodeName=jsonObject.getString(NODE_NAME);
+            nodeName = jsonObject.getString(NODE_NAME);
         }
         nodeInfoDTO.setName(nodeName);
         try {
             tSocket.open();
             CommonResultDTO commonResultDTO = centerSynClient.registerNode(nodeInfoDTO, "544484");
-            log.info("register node {}",commonResultDTO);
+            log.info("register node {}", commonResultDTO);
         } catch (TException e) {
-            log.warn(e.getMessage(),e);
-        }finally {
+            log.warn(e.getMessage(), e);
+        } finally {
             tSocket.close();
         }
     }
 
     public Boolean updateNodeInfo() {
         OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        CommandDTO commandDTO=new CommandDTO();
+        CommandDTO commandDTO = new CommandDTO();
         commandDTO.setCommand("info");
 
         ExecuteResultDTO resultDTO = commandService.executeCommandOnNode(commandDTO);
-        if(resultDTO.getResultCode()==0) {
+        if (resultDTO.getResultCode() == 0) {
             Map<String, String> infoMap = GrepUtil.grepDockerInfo(resultDTO.getReturnMessage());
             nodeInfoDTO.setDockerVersion(infoMap.get("Server Version"));
             nodeInfoDTO.setContainerCount(Long.valueOf(infoMap.get("Containers")));
             nodeInfoDTO.setRunningContainerCount(Long.valueOf(infoMap.get("Running")));
-        }else{
+        } else {
             nodeInfoDTO.setDockerVersion("UNKNOWN");
         }
         nodeInfoDTO.setFreeDiskSpace(systemMXBean.getFreeSwapSpaceSize());
@@ -134,8 +147,41 @@ public class NodeServiceImpl implements NodeService {
         } catch (TException e) {
             log.warn(e.getMessage(), e);
             return false;
-        }finally {
+        } finally {
             tSocket.close();
         }
+    }
+
+    @Override
+    public Boolean updateLog(Long truncateTime, String containerId) {
+        File file = new File(DOCKER_LOG_DIR_PATH, new StringBuilder(containerId).append("/")
+                .append(containerId).append("-json.log").toString());
+        Date startDate = new Date(truncateTime);
+        Date endDate = new Date(truncateTime + 5 * 60 * 1000L);
+        StringBuilder logBuilder = new StringBuilder();
+        try (FileReader fileReader = new FileReader(file)) {
+            BufferedReader reader = new BufferedReader(fileReader);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                String timeStr = line.substring(8, 26);
+                Date date = simpleDateFormat.parse(timeStr);
+                if (date.after(startDate)) {
+                    logBuilder.append(line);
+                    if (date.after(endDate)) {
+                        break;
+                    }
+                }
+            }
+            ByteBuffer byteBuffer = ByteBuffer.wrap(logBuilder.toString().getBytes());
+            CommonResultDTO resultDTO = centerSynClient.uploadLog(byteBuffer, nodeInfoDTO.getTag());
+            return resultDTO.isResult();
+        } catch (IOException e) {
+            log.error(e.getMessage(),e);
+        } catch (ParseException e) {
+            log.error(e.getMessage(),e);
+        } catch (TException e) {
+            log.error(e.getMessage(),e);
+        }
+        return false;
     }
 }

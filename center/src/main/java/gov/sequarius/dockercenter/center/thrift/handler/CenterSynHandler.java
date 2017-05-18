@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,11 @@ public class CenterSynHandler implements CenterSynRPCService.Iface {
             jobDTOs.add(jobService.convertJobConfig(job));
         }
         return jobDTOs;
+    }
+
+    @Override
+    public CommonResultDTO uploadLog(ByteBuffer byteBuffer, int i) throws TException {
+        return null;
     }
 
 

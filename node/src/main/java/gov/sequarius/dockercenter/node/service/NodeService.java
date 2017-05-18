@@ -5,4 +5,6 @@ package gov.sequarius.dockercenter.node.service;
  */
 public interface NodeService {
     Boolean updateNodeInfo();
+
+    Boolean updateLog(Long truncateTime, String containerId);
 }
