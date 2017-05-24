@@ -1,34 +1,53 @@
 package gov.sequarius.dockercenter.node.service.impl;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import gov.sequarius.dockercenter.common.rpc.CommandDTO;
 import gov.sequarius.dockercenter.common.rpc.ExecuteResultDTO;
 import gov.sequarius.dockercenter.node.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sequarius on 2017/3/26.
  */
-@Service
 @Slf4j
-public class CommandServiceImpl implements CommandService {
+@Service
+public class CommandServiceImp implements CommandService {
+    @Resource
+    DockerClient dockerClient;
+
     @Override
     public ExecuteResultDTO executeCommandOnNode(CommandDTO command) {
         ExecuteResultDTO resultDTO = new ExecuteResultDTO();
         resultDTO.setCommandTag(command.getCommandTag());
         resultDTO.setNodeTag(command.getNodeTag());
-        if (command.getParams() == null) {
-            command.setParams(new ArrayList<>());
+        List<String> params = command.getParams();
+        if (params == null) {
+            params = new ArrayList<>();
+            command.setParams(params);
         }
+
+        if (command.getCommand().equals("run")) {
+            CreateContainerResponse response = dockerClient.createContainerCmd(params.get(params.size() - 1))
+                    .withCmd(params.remove(params.size() - 1)).exec();
+            String id = response.getId();
+            dockerClient.startContainerCmd(id);
+            resultDTO.setReturnMessage(id);
+            return resultDTO;
+        }
+
         StringBuilder commandBuilder = new StringBuilder("docker");
         commandBuilder.append(" ").append(command.getCommand());
-        for (String s : command.getParams()) {
+        for (String s : params) {
             commandBuilder.append(" ").append(s);
         }
         String[] shellCommand;
@@ -80,4 +99,5 @@ public class CommandServiceImpl implements CommandService {
         }
 
     }
+
 }
