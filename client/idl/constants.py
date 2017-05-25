@@ -11,7 +11,7 @@ from thrift.protocol.TProtocol import TProtocolException
 import sys
 from .ttypes import *
 RESPONSE_CODE_MAP = {
-    -267390975: "UNDEFINED CODE",
     401: "UNAUTHORIZED NODE",
     0: "SUCCESS",
+    -267390975: "UNDEFINED CODE",
 }

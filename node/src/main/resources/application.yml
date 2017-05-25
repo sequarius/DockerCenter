@@ -9,6 +9,7 @@ gov:
   sequarius:
     docker_center:
       file_path: config
+      log_path: /var/lib/docker/containers
 logging:
   level:
     root: info

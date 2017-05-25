@@ -10,7 +10,7 @@ from prettytable import PrettyTable
 
 sys.path.append("./idl")
 
-docker_center_command = ['node-list', 'help', 'version']
+docker_center_command = ['node-list', "create-job", "job-list", "start-job", "stop-job", 'help', 'version']
 docker_center_param_name = ['--node-tag']
 
 BILLION = 100000000
@@ -18,7 +18,8 @@ BILLION = 100000000
 
 def execute_command(dc_command):
     try:
-        transport = TSocket.TSocket('localhost', 9047)
+        # transport = TSocket.TSocket('localhost', 9047)
+        transport = TSocket.TSocket('192.168.30.1', 9047)
         transport = TTransport.TBufferedTransport(transport)
         protocol = TBinaryProtocol.TBinaryProtocol(transport)
         client = CenterSynRPCService.Client(protocol)
@@ -66,10 +67,7 @@ def parse_param(args):
 
 def get_node_info():
     try:
-        transport = TSocket.TSocket('localhost', 9047)
-        transport = TTransport.TBufferedTransport(transport)
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
-        client = CenterSynRPCService.Client(protocol)
+        client, transport = get_thrift_client()
         transport.open()
         result = client.getNodeMap()
         transport.close()
@@ -86,6 +84,64 @@ def get_node_info():
         print(e)
 
 
+def create_job(job_name):
+    try:
+        client, transport = get_thrift_client()
+        transport.open()
+        result = client.newJob(job_name)
+        transport.close()
+        print(result.message)
+    except Thrift.TException as e:
+        print(e)
+
+
+def start_job(job_name):
+    try:
+        client, transport = get_thrift_client()
+        transport.open()
+        result = client.startJob(job_name)
+        transport.close()
+        print(result.message)
+    except Thrift.TException as e:
+        print(e)
+
+
+def stop_job(job_name):
+    try:
+        print(job_name)
+        client, transport = get_thrift_client()
+        transport.open()
+        result = client.stopJob(job_name)
+        transport.close()
+        print(result.message)
+    except Thrift.TException as e:
+        print(e)
+
+
+def get_thrift_client():
+    transport = TSocket.TSocket('localhost', 9047)
+    transport = TTransport.TBufferedTransport(transport)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = CenterSynRPCService.Client(protocol)
+    return client, transport
+
+
+def get_job_list():
+    try:
+        client, transport = get_thrift_client()
+        transport.open()
+        result = client.getJoblist()
+        transport.close()
+        print(result)
+
+        x = PrettyTable(["ID", "Name", "Status", "Deploy Strategy", "SubName Strategy"])
+        for job in result:
+            x.add_row([job.jobId, job.jobname, job.status, job.deployStrategy, job.subNameStrategy])
+        print(x)
+    except Thrift.TException as e:
+        print(e)
+
+
 if __name__ == '__main__':
     command = parse_param(sys.argv)
     if command.command not in docker_center_command:
@@ -93,3 +149,35 @@ if __name__ == '__main__':
     else:
         if command.command == docker_center_command[0]:
             get_node_info()
+        if command.command == docker_center_command[1]:
+            if len(command.docker_params) != 1:
+                print("missing job name, try user dockerc help to get function use.")
+            else:
+                job_name = command.docker_params[0]
+                create_job(job_name)
+        if command.command == docker_center_command[2]:
+            get_job_list()
+        if command.command == docker_center_command[3]:
+            if len(command.docker_params) != 1:
+                print("missing job name, try user dockerc help to get function use.")
+            else:
+                job_name = command.docker_params[0]
+                start_job(job_name)
+        if command.command == docker_center_command[4]:
+            if len(command.docker_params) != 1:
+                print("missing job name, try user dockerc help to get function use.")
+            else:
+                job_name = command.docker_params[0]
+                stop_job(job_name)
+
+        if command.command == docker_center_command[5]:
+            print("node-tag ${node_tag}\t use this param to set the node to run command.")
+            print("node-list\t show all nodes registered in Docker Center.")
+            print("job-list\t show all jobs registered in Docker Center.")
+            print("create-job ${job_name}\t create a new job in Docker Center.")
+            print("start-job ${job_name}\t start a job in Docker Center.")
+            print("stop-job ${job_name}\t stop a job in Docker Center.")
+            print("log ${job_name}\t show all logs achieved of job ")
+            print("version\t show Docker Center current version.")
+        if command.command == docker_center_command[6]:
+            print("Docker Center 1.0.0")

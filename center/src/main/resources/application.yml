@@ -17,6 +17,7 @@ gov:
     center:
       max-history-record: 500
       max-node-count: 100
+      job-config-path: job
 
 logging:
   level:

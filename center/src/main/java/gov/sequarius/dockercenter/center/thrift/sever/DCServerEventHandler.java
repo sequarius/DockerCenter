@@ -41,9 +41,9 @@ public class DCServerEventHandler implements TServerEventHandler {
     public ServerContext createContext(TProtocol tProtocol, TProtocol tProtocol1) {
         if (tProtocol != null && tProtocol.getTransport() != null) {
             Socket socket = ((TSocket) tProtocol.getTransport()).getSocket();
-            log.debug("[Monitor] ThriftServer Socket Info : server address: " + socket.getLocalAddress() + " , " +
-                    "port: " + socket.getLocalPort() + " , client address: " + socket.getInetAddress() + " , " +
-                    "port: " + socket.getPort());
+//            log.debug("[Monitor] ThriftServer Socket Info : server address: " + socket.getLocalAddress() + " , " +
+//                    "port: " + socket.getLocalPort() + " , client address: " + socket.getInetAddress() + " , " +
+//                    "port: " + socket.getPort());
             socketMap.put(Thread.currentThread().getId(),socket);
         }
         return null;

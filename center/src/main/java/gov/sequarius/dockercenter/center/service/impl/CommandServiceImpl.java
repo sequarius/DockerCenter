@@ -1,6 +1,7 @@
 package gov.sequarius.dockercenter.center.service.impl;
 
 import gov.sequarius.dockercenter.center.common.Constant;
+import gov.sequarius.dockercenter.center.domain.JobConfig;
 import gov.sequarius.dockercenter.center.service.CenterService;
 import gov.sequarius.dockercenter.center.service.CommandService;
 import gov.sequarius.dockercenter.center.support.DockerContext;
@@ -60,6 +61,7 @@ public class CommandServiceImpl implements CommandService {
                     String.valueOf(tag),"try use dockerc --node-list to confirm the right tag."));
             return executeResultDTO;
         }
+        log.debug("node =={}",nodeInfoDTO);
         NodeRPCService.Client client = centerAsynThriftServer.selectClientByIp(nodeInfoDTO.getIp());
         if(client==null) {
             executeResultDTO.setReturnMessage(new StringBuilder("cant find node ").append(nodeInfoDTO.getIp()).append
@@ -88,6 +90,7 @@ public class CommandServiceImpl implements CommandService {
 
     @Override
     public void onCommandExecuted(ExecuteResultDTO resultDTO) {
+        log.debug("result dot=={}",resultDTO);
         CountDownLatch countDownLatch = downLatchMap.get(resultDTO.getCommandTag());
         if(resultDTO==null){
             log.warn("received an unknown result=={}",resultDTO);
@@ -95,6 +98,26 @@ public class CommandServiceImpl implements CommandService {
         }
         resultMaps.put(resultDTO.getCommandTag(),resultDTO);
         countDownLatch.countDown();
+    }
+
+    @Override
+    public void startContainer(Integer minNodeTag, String nextContainer) {
+
+    }
+
+    @Override
+    public void stopContainer(Integer maxNodeTag) {
+
+    }
+
+    @Override
+    public void startJob(JobConfig jobConfig) {
+
+    }
+
+    @Override
+    public void stoptJob(Long jobid) {
+
     }
 
 
