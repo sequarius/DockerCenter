@@ -37,10 +37,11 @@ public class CommandServiceImp implements CommandService {
         }
 
         if (command.getCommand().equals("run")) {
-            CreateContainerResponse response = dockerClient.createContainerCmd(params.get(params.size() - 1))
-                    .withCmd(params.remove(params.size() - 1)).exec();
+            String image = params.remove(params.size() - 1);
+            log.debug("image=={},params=={}",image,params);
+            CreateContainerResponse response = dockerClient.createContainerCmd(image).exec();
             String id = response.getId();
-            dockerClient.startContainerCmd(id);
+            dockerClient.startContainerCmd(id).exec();
             resultDTO.setReturnMessage(id);
             return resultDTO;
         }
