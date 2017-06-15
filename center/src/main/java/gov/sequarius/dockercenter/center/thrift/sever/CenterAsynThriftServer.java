@@ -4,9 +4,10 @@ import gov.sequarius.dockercenter.center.thrift.handler.CenterAsynHandler;
 import gov.sequarius.dockercenter.common.rpc.CenterAsynRPCService;
 import gov.sequarius.dockercenter.common.rpc.NodeRPCService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,13 +58,16 @@ public class CenterAsynThriftServer implements IThriftServer {
     private void initServer() {
         try {
             log.info("start thrift server " + thriftServerName + " on port " + thriftServerPort);
-            TServer.Args args = new TServer.Args(new TServerSocket(thriftServerPort));
-            TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
+            TThreadPoolServer.Args args=new TThreadPoolServer.Args(new TServerSocket(thriftServerPort));
+            TBinaryProtocol.Factory protocolFactory=new TBinaryProtocol.Factory();
+            TProcessorFactory processorFactory=new TProcessorFactory(new CenterAsynRPCService.Processor(centerHandler));
+            args.protocolFactory(protocolFactory);
+            args.processorFactory(processorFactory);
             boostTProcessorFactory = new BoostTProcessorFactory(new CenterAsynRPCService.Processor
                     (centerHandler));
             args.protocolFactory(protocolFactory);
             args.processorFactory(boostTProcessorFactory);
-            server = new TSimpleServer(args);
+            server = new TThreadPoolServer(args);
         } catch (TTransportException e) {
             log.error("thrift server start error" + e.getMessage());
             e.printStackTrace();

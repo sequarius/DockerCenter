@@ -61,6 +61,8 @@ public class JobServiceImpl implements JobService {
             jobConfig.setName(jobName);
             Step startStep = new Step();
             Step endStep = new Step();
+            jobConfig.setDeployStrategy("random");
+            jobConfig.setSubNameStrategy("increase_id");
             startStep.setCondition(new Condition());
             endStep.setCondition(new Condition());
             jobConfig.setStartStep(startStep);
